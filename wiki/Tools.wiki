@@ -10,6 +10,9 @@
 == XML Office Documents ==
 
   * "Antiword for Office 2007" (http://blog.kiddaland.net/2009/07/antiword-for-office-2007/): perl script to extract text from .docx...could we tweak to do xlsx/pptx also?
+  * Using existing utilities?:
+    * $ unzip document.docx /word/document.xml
+    * $ xmllint ---html ---htmlout document.xml > document.html
 
 == PDF ==
 
