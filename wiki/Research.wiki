@@ -7,6 +7,11 @@ Snort manual:http://www.snort.org/assets/140/snort_manual_2_8_6.pdf
 For triggering outside rules:
      "The *logto* option tells Snort to log all packets that trigger this rule to a special output log file."
      Could we then post process the files (zip/whatnot) and then run another instance of Snort on the logged pcap files to generate the alerts?
+
+     I found a Perl script that unzips a word .docx file and displays the specific file contents in plaintext: http://blog.kiddaland.net/2009/07/antiword-for-office-2007/
+
+     The post also references a previous tool that does the same kind of thing for .doc files: http://www.winfield.demon.nl/
+
      Also, once an alert is triggered the *tag* keyword allows for traffic involved the src/dst host(s) to be flagged and further analyzed
     If we have Snort configured to log to a database, *then in order to 'trigger' an outside alert after post-processing all we have to do it log an alert to the appropriate database table, independent of Snort*. This should show up in BASE/whatever frontend tool we're using.
 
