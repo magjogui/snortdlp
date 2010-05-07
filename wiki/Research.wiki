@@ -8,7 +8,7 @@ For triggering outside rules:
      "The *logto* option tells Snort to log all packets that trigger this rule to a special output log file."
      Could we then post process the files (zip/whatnot) and then run another instance of Snort on the logged pcap files to generate the alerts?
      Also, once an alert is triggered the *tag* keyword allows for traffic involved the src/dst host(s) to be flagged and further analyzed
-    *If we have Snort configured to log to a database, then in order to 'trigger' an outside alert after post-processing all we have to do it log an alert to the appropriate database table, independent of Snort*. This should show up in BASE/whatever frontend tool we're using.
+    * If we have Snort configured to log to a database, then in order to 'trigger' an outside alert after post-processing all we have to do it log an alert to the appropriate database table, independent of Snort *. This should show up in BASE/whatever frontend tool we're using.
 
 To the problem of multiple packets:
      The *Stream5* preprocessor should be able to reassemble some packet streams (based on a variety of criteria) into a single pseudo-stream we can test on, so the issue of splitting a document over several packets might not be a problem
