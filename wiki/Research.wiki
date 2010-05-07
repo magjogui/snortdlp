@@ -12,6 +12,8 @@ For triggering outside rules:
 
      The post also references a previous tool that does the same kind of thing for .doc files: http://www.winfield.demon.nl/
 
+     An possible strategy here could be for the Snort signatures to search only for the headers of these specific formats in a reassembled TCP stream, then log upon detection. Then we could run a variety of scripts based on the specific header to extract plain text information from .docx/.ppt/.pdf/etc and run the textual match on that instead of the raw data. Thoughts?
+
      Also, once an alert is triggered the *tag* keyword allows for traffic involved the src/dst host(s) to be flagged and further analyzed
     If we have Snort configured to log to a database, *then in order to 'trigger' an outside alert after post-processing all we have to do it log an alert to the appropriate database table, independent of Snort*. This should show up in BASE/whatever frontend tool we're using.
 
