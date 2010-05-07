@@ -1,0 +1,11 @@
+#summary Research results
+
+
+Decent reference page: http://packetstormsecurity.nl/papers/IDS/snort_rules.htm
+
+For triggering outside rules:
+     "The 'logto' option tells Snort to log all packets that trigger this rule to a special output log file."
+     Could we then post process the files (zip/whatnot) and then run another instance of Snort on the logged pcap files to generate the alerts?
+
+To the problem of multiple packets:
+     The Frag3/Stream5 preprocessors should be able to reassemble some packet streams (based on a variety of criteria) into a single pseudo-stream we can test on, so the issue of splitting a document over several packets might not be a problem
