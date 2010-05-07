@@ -5,7 +5,7 @@
 Various brainstormed tasks to start the project off.
 
 
-== Initial Tasks ==
+== Initial Conceptual Tasks ==
 
   * Trigger external file processing from Snort (directly or with PCAP workaround)
     * Custom triggering alerts from outside of Snort
@@ -15,8 +15,18 @@ Various brainstormed tasks to start the project off.
   * Keytext selection methods (histogram vs random?) depending on filetypes
     * The more unique words used the better a random sampling might be
 
+== Initial Specific Tasks ==
+
+  # Generate a Visio layout of the various components
+  # Start conceptual design of post-processing component (Visio)
+  # Start conceptual design of the keytext component (Visio?)
+  # Decide what types/extensions of data we're going to focus on first
+    * Possibly: Microsoft Office docs (.xls, .ppt, .doc, etc), PDF, plaintext?
+  # Decide what language to build the keytext selection component in
+  # Decide what language to build the post-processing component in
+
 == Future Tasks ==
 
-  * Web frontend (probably PHP)
-  * MySQL backend
+  * Design web frontend (PHP?)
+  * Setup backend (MySQL)
   * Alert testing
