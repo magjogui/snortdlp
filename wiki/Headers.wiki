@@ -9,4 +9,4 @@
   * .docx: 50 4B 03 04 14 00 06 00 08
   * .pptx: 50 4B 03 04 14 00 06 00 08
   * .xlsx: 50 4B 03 04 14 00 06 00 08
-  * .pdf:  25 50 44 46 2D       (%PDF-version number)
+  * .pdf:  25 50 44 46 2D -> (%PDF-version number)
