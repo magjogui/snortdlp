@@ -1,13 +1,22 @@
-#summary One-sentence summary of this page.
+#summary To Do
 
-= Introduction =
+== Introduction ==
 
-Add your content here.
+Various brainstormed tasks to start the project off.
 
 
-= Details =
+== Initial Tasks ==
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * Trigger external file processing from Snort (directly or with PCAP workaround)
+    * Custom triggering alerts from outside of Snort
+  * Look at packet captures for various methods and datatypes in exfiltration - how documents are broken up in packets
+  * Dynamic rule generation
+    * Rule chaining?
+  * Keytext selection methods (histogram vs random?) depending on filetypes
+    * The more unique words used the better a random sampling might be
+
+== Future Tasks ==
+
+  * Web frontend (probably PHP)
+  * MySQL backend
+  * Alert testing
