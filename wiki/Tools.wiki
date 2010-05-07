@@ -16,7 +16,7 @@
 
 == PDF ==
 
-  * pdftotxt: open source linux command line utility that takes a PDF input and outputs extracted text
+  * pdftotxt: open source linux command line utility that takes a PDF input and outputs extracted text. Built into most distributions.
   * PDFMiner (http://www.unixuser.org/~euske/python/pdfminer/index.html): Python library to mine PDF data from python
 
 
