@@ -1,6 +1,10 @@
 #summary Research results
 
 
+*From the "Scalable document fingerprinting" paper in 'Research' ->*
+"We can significantly reduce false positives by using a substring selection strategy based on frequency measures. One way to do this is to compute the set of all substrings for the document and then pick the least frequently occurring substrings. However this is computationally expensive and does not yield good results because the space of substrings in one document is not a useful indication of the overall frequency of substrings."
+
+
 Snort manual:http://www.snort.org/assets/140/snort_manual_2_8_6.pdf
 
 
