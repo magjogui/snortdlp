@@ -7,7 +7,7 @@ Created on May 10, 2010
 def inRepository(substring):
     
     """
-    Input: canidate unique substring
+    Input: candidate unique substring
     Output: true if substring is in the repository, false if not
     
     Use database connection...
