@@ -4,23 +4,15 @@ Created on May 10, 2010
 @author: Will, Tyler
 '''
 
-
-'''
-Proposed methodology for substring selection:
-1. Take each document and break it into discrete words/numbers (we can determine a way to standardize excel documents, databases, etc.)
-
-2. Enter each word into a global histogram stored in MySQL and into a document-specific histogram stored temporarily.
-
-3. To select the substring of each document, iterate through 5-10 word substrings(determine the length with experimentation). Add together the frequencies of each word from the global histogram to get a 'global' score for that substring and repeat with the document-only data to get a 'local' score.
-
-4. Using some kind of weighting, select the substring with the lowest combined global/local frequency score as the uniquely identifiable substring:
-
-G = substring global hist score, L = substring local hist score.
-min(T = alpha*G + beta*L).
-
-5. Search for this substring in the IP repository. If found, select the substring with the next lowest score repeat until the selected substring is not found in the repository.  
-'''
-
+def inRepository(substring):
+    
+    """
+    Input: canidate unique substring
+    Output: true if substring is in the repository, false if not
+    """
+    
+    return False
+    
 
 def standardizeText(inputText):
     
@@ -28,6 +20,9 @@ def standardizeText(inputText):
     Input: text string to standardize
     Output: input text stripped of everything except letters and numbers,
             each word separated by a single space
+    
+    ToDo: more standardization, i.e. stripping out punctuation etc.
+    
     """
     
     return inputText.lower().split()
@@ -42,7 +37,8 @@ def selectSubstring(histogram, substringLength, inputText):
     
     Issue: if the text is standardized, the substring needs to not be-
             we have to search for the exact substring in the Snort rules!
-            So we need to identify where the substring occurs
+            So we need to identify where the substring occurs and grab the 
+            raw version of that substring
     """
     
     inputText = standardizeText(inputText)
@@ -58,10 +54,15 @@ def selectSubstring(histogram, substringLength, inputText):
         
         print substring,":",score
         
-        # if we've found a new lowest-scored substring...
+        # if we've found a new lowest-scored substring,
+        # make sure it is not in the IP repository
         if score < lowScore:
-            lowScore = score
-            lowSubstring = substring
+            if not inRepository(lowSubstring):
+                lowScore = score
+                lowSubstring = substring
+    
+    if lowSubstring == "":
+        print "Unique substring not found: consider increasing substring length"
     
     return lowSubstring
     

@@ -1,0 +1,15 @@
+
+Proposed methodology for substring selection:
+
+1. Take each document and break it into discrete words/numbers (we can determine a way to standardize excel documents, databases, etc.)
+
+2. Enter each word into a global histogram stored in MySQL and into a document-specific histogram stored temporarily.
+
+3. To select the substring of each document, iterate through 5-10 word substrings(determine the length with experimentation). Add together the frequencies of each word from the global histogram to get a 'global' score for that substring and repeat with the document-only data to get a 'local' score.
+
+4. Using some kind of weighting, select the substring with the lowest combined global/local frequency score as the uniquely identifiable substring:
+
+G = substring global hist score, L = substring local hist score.
+min(T = alpha*G + beta*L).
+
+5. Search for this substring in the IP repository. If found, select the substring with the next lowest score repeat until the selected substring is not found in the repository.  
