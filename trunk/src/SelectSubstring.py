@@ -9,6 +9,9 @@ def inRepository(substring):
     """
     Input: canidate unique substring
     Output: true if substring is in the repository, false if not
+    
+    Use database connection...
+    
     """
     
     return False
