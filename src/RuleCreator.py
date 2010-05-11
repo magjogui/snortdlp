@@ -4,25 +4,46 @@ Created on May 11, 2010
 @author: Will, Tyler
 '''
 
+import os
+
 class RuleCreator:
     
     
-    def __init__(self, filename, substring):
+    def __init__(self, snortFile, filename, substring):
         self.filename = filename
         self.substring = substring
+        self.snortFile = snortFile
     
     def addSnortRule(self):
         
         #open the snort file location for appending
-        snortFile = open(file, 'a')
-        self.sid = 1000000 + len(snortFile.readlines()) + 1
+        lines = ""
+        if os.path.exists(self.snortFile):
+            file = open(self.snortFile, 'r')
+            lines = file.readlines()
+        self.sid = 1000000 + len(lines) -4
+        
         self.createRule()
         
-        snortFile.write("\n" + self.rule)
+        file = open(self.snortFile, 'a')
+        file.write(self.rule + "\n")
+    
+    def sanitizeRegex(self, word):
         
+        """
+        Input: word used to build regex expression
+        Output: word sanitized of all reserved regex charaters
+        """
+        
+        reserved = "[\\^$.|?*+(){}"
+        for char in reserved:
+            word = word.replace(char,"\\"+char)
+        
+        return word
+    
     def createRule(self):
         regex = self.createRegex()
-        self.rule = "alert tcp $INTERNAL_NET any -> $EXTERNAL_NET any (msg: DLP" + self.filename + " alert\"; pcre:\"" + regex + "\"; sid:" + self.sid + ";)"
+        self.rule = "alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg: \"DLP: " + str(self.filename) + " alert\"; pcre:\"" + str(regex) + "\"; classtype:data-loss; sid:" + str(self.sid) + ";)"
         
     def createRegex(self):
         """
@@ -33,7 +54,9 @@ class RuleCreator:
         """
         
         words = self.substring.split()
-        rule = ")( )* (".join(words)
+        cleanWords = [self.sanitizeRegex(word) for word in words]
+        
+        rule = ")( )* (".join(cleanWords)
         rule = "/(" + rule + ")/is"
         
         return rule
