@@ -22,7 +22,7 @@ class RuleCreator:
         
     def createRule(self):
         regex = self.createRegex()
-        self.rule = "alert tcp $INTERNAL_NET any -> $EXTERNAL_NET any (msg: DLP" + self.filename + " alert”; pcre:\"" + regex + "\"; sid:" + self.sid + ";)"
+        self.rule = "alert tcp $INTERNAL_NET any -> $EXTERNAL_NET any (msg: DLP" + self.filename + " alert\"; pcre:\"" + regex + "\"; sid:" + self.sid + ";)"
         
     def createRegex(self):
         """
