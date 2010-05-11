@@ -10,14 +10,14 @@ def main():
     
     configLines = open("config").readlines()
     
-    locationFile = configLines[1].strip()
+    repositoryLocationFile = configLines[1].strip()
     substringLength = int(configLines[4])
     snortFile = configLines[7]
     
     #fileToAdd needs to be an absolute path!!!
     fileToAdd = 'C:\\Users\\saintgosu\\Documents\\SnortDLP\\risk2.txt'
 
-    hist = Histogram(locationFile, substringLength, fileToAdd)    
+    hist = Histogram(repositoryLocationFile, substringLength, fileToAdd)    
     substring = hist.selectSubstring()
     
     print substring
