@@ -5,6 +5,7 @@ Created on May 11, 2010
 '''
 
 from Histogram import Histogram
+from RuleCreator import RuleCreator
 
 def main():
     
@@ -22,6 +23,8 @@ def main():
     
     print substring
     #createRule(substring)
+    rule = RuleCreator(fileToAdd, substring)
+    
 
 if __name__ == "__main__":
     main()
