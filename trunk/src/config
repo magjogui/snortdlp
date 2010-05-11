@@ -1,0 +1,8 @@
+#File containing repository locations
+locations.txt
+
+#Length of the substring to return
+10
+
+#Location of file to write Snort rules to
+snortIP.rules

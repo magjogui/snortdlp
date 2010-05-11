@@ -11,7 +11,7 @@ from each file into the global database histogram.
 
 import os
 #import MySQLdb need to install!
-from SelectSubstring import returnHistogram
+from Histogram import returnHistogram
 
 
 # MySql database interface = MySQLdb
@@ -24,6 +24,8 @@ def addToHistogram(filePath):
     Output: none
     
     Add a given file at filePath to the global histogram database
+    
+    ToDo: implement database connection, insert into table, etc.
     """
     
     #connect to database
@@ -35,7 +37,6 @@ def addToHistogram(filePath):
     print histogram
     
     #input histogram into database
-    
 
 def walkLocation(path):
     
@@ -57,7 +58,6 @@ def main():
     
     for path in locations:
         walkLocation(path)
-    
 
 if __name__ == "__main__":
     main()
