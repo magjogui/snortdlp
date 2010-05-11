@@ -4,25 +4,34 @@ Created on May 10, 2010
 @author: Will, Tyler
 '''
 
-import os
-
-#
+import os, re
 
 class Histogram:
     
     def __init__(self, locFile, subLength, fileToAdd):
         
-        # setup class variable(s)
+        # setup class variables
         self.repositoryLocationFile = locFile
         self.substringLength = subLength
         self.histogram = dict()
         self.fileName = fileToAdd
+        
+        #for .doc and other files, we need to read the file in under binary mode ('rb')
+        #otherwise the non-ascii characters mess up the viewing
+        #regex to strip out all non-ascii characters:
+        """rawFileText = open(self.fileName,'rb').read()
+        regex = re.compile("[^A-Za-z 0-9 \.,\?'""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*")
+        
+        print rawFileText[:50]
+        # replace with "" or " "? Preserve whitepace?
+        cleanText = regex.sub("",rawFileText)"""
+        
+        
         self.inputText = self.standardizeText(open(self.fileName).read())
         
         #generate the histogram from the input text
         self.genHistogram()
 
-    
     def repositoryScore(self, substring):
         
         """
@@ -125,10 +134,11 @@ class Histogram:
             substring = " ".join(inputText[startLocation:startLocation+self.substringLength])
             if not self.inRepository(substring):
                 foundLow = True
+                print "Unique substring for " + self.fileName + ": " + substring
                 return substring
         
         if not foundLow:
-            print "Unique substring not found: consider increasing substring length"
+            print "Not found for " + self.fileName + ": consider increasing substring length"
         
         return ""
         
