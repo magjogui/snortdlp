@@ -8,7 +8,8 @@ def addSnortRule(file, string):
     
     #open the snort file location for appending
     snortFile = open(file,'a')
-
+    sid = 1000000 + len(snortFile.readlines()) + 1
+    
 
 def createRegex(string):
     """
