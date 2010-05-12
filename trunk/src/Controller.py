@@ -8,59 +8,64 @@ from Histogram import Histogram
 from RuleCreator import RuleCreator
 import os
 
-def addFile(snortFile, repositoryLocationFile, substringLength, fileToAdd):
+def addFile(snortFile, repositoryLocations, substringLength, fileToAdd):
+    """Create a snort rule for a specified input file.
+
+    Keyword arguments:
+    snortFile -- path to the file to write snort rules out to
+    repositoryLocations -- list of strings of the paths to each repository location
+    substringLength -- length of the unique substring to select
+    fileToAdd -- path of the input file the substring was generated from
+    """
     
-    hist = Histogram(repositoryLocationFile, substringLength, fileToAdd)    
+    #old: hist = Histogram(repositoryLocationFile, substringLength, fileToAdd)
+    hist = Histogram(repositoryLocations, substringLength, fileToAdd)
     substring = hist.selectSubstring()
     
     #if a unique substring is not found, don't add that rule
     if substring != "":
-        rule = RuleCreator(snortFile, fileToAdd, substring)
+        rule = RuleCreator(snortFile, repositoryLocations, fileToAdd, substring)
         rule.addSnortRule()
+        rule.regexInRepository()
         print "rule added for " + fileToAdd
 
-def walkRepository(snortFile, repositoryLocationFile, substringLength):
-    
+def crawlRepository(snortFile, repositoryLocations, substringLength):
+    """Crawl the repository locations and create rules for each found file.
+
+    Keyword arguments:
+    snortFile -- path to the file to write snort rules out to
+    repositoryLocations -- list of strings of the paths to each repository location
+    substringLength -- length of the unique substring to select
     """
-    Input: candidate unique substring
-    Output: true if substring is in any file in the repository, false if not
-    """
-    
-    # repositoryLocationFile contains the repository locations 
-    locations = open(repositoryLocationFile, 'r').readlines()
-    
+
     # crawl the path, checking if the substring is in each file
-    for path in locations:
+    for path in repositoryLocations:
         for root, dirs, files in os.walk(path):
             for file in files:
-                addFile(snortFile, repositoryLocationFile, substringLength, root+file)
-        
-    return False
-
+                addFile(snortFile, repositoryLocations, substringLength, root+file)
+    
 def main():
     
-    configLines = open("config").readlines()
+    configurationFile = "config"
+    configLines = open(configurationFile).readlines()
     
-    repositoryLocationFile = configLines[1].strip()
-    substringLength = int(configLines[4])
-    snortFile = configLines[7]
+    repositoryLocations = list()
     
-    """
-    #fileToAdd needs to be an absolute path!!!
-    fileToAdd = 'C:\\Users\\saintgosu\\Documents\\SnortDLP\\risk2.txt'
+    for line in configLines:
+        elements = line.split(":")
+        
+        #pull the arguments out of the configuration file
+        if len(elements) > 1: #if this is a configuration line with ":"
+            if elements[0] == "Substring length" :
+                substringLength = int(line[17:])
+            elif elements[0] == "Snort rule file":
+                snortFile = line[16:].strip()
+            elif elements[0] == "location":
+                repositoryLocations.append(line[9:].strip())
 
-    hist = Histogram(repositoryLocationFile, substringLength, fileToAdd)    
-    substring = hist.selectSubstring()
-    
-    #createRule(substring)
-    rule = RuleCreator(snortFile, fileToAdd, substring)
-    rule.addSnortRule()
-    """
-    
-    walkRepository(snortFile, repositoryLocationFile, substringLength)
+    crawlRepository(snortFile, repositoryLocations, substringLength)
     
     print "\nfinished"
     
-
 if __name__ == "__main__":
     main()

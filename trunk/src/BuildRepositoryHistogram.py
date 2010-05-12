@@ -2,40 +2,40 @@
 Created on May 10, 2010
 
 @author: Will, Tyler
-
-Take datastore locations from "locations.txt".
-Crawl the documents in each location and input the word frequencies 
-from each file into the global database histogram.
-
 '''
 
 import os
-#import MySQLdb need to install!
+#import MySQLdb #need to install!!!
 
 # MySql database interface = MySQLdb
 # http://mysql-python.sourceforge.net/ 
 
-def standardizeText(inputText):
+def standardizeText(self, inputText):
+    """Standardizes input text.
     
+    Keyword arguments:
+    inputText -- text string to standardize
+    
+    Returns:
+    string input text stripped of everything except letters and numbers, each word separated by a single space
+    
+    ToDo: should we use regular expressions to strip all non-ascii out?
     """
-    Input: text string to standardize
-    Output: string input text stripped of everything except letters and numbers,
-            each word separated by a single space
     
-    ToDo: more standardization, i.e. stripping out punctuation etc.
-    
-    """
+    #regex to strip out all non-ascii characters:
+    #rawFileText = open(self.fileName,'rb').read()
+    #regex = re.compile("[^A-Za-z 0-9 \.,\?'""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*")
+    #cleanText = regex.sub("",rawFileText)
     
     return " ".join(inputText.lower().split())
 
 def addToHistogram(filePath):
-    """
-    Input: absolute path of file to add to the histogram table
-    Output: none
+    """Add a specific file to the global histogram.
     
-    Add a given file at filePath to the global histogram database
-    
-    ToDo: implement database connection, insert into table, etc.
+    Keyword arguments:
+    filePath -- path of the file to add to the global histogram
+
+    ToDo: implement database connection, insert into table, implement
     """
     
     #Read in given file and build a histogram from the text
@@ -54,27 +54,24 @@ def addToHistogram(filePath):
 
 def walkLocation(path):
     
-    """
-    Input: path of location to crawl files
-    Output: none
+    """Crawl a specific location and add each file to the histogram.
     
-    Crawl the filepath given and add each file to the global histogram
+    Keyword arguments:
+    path -- absolute path of the file to add to the histogram
     """
     
     for root, dirs, files in os.walk(path):
         for file in files:
             addToHistogram(root+file)
         
-def crawlLocations(repositoryLocationFile):
+def crawlLocations(repositoryLocations):
     
+    """Crawl each repository location and add each file.
+    
+    Keyword arguments:
+    repositoryLocations -- list of strings of the paths to each repository location
     """
-    Input: location of file containing repository locations
-    Output: none
-    """
-    
-    # repositoryLocationFile contains the repository locations 
-    locations = open(repositoryLocationFile, 'r').readlines()
-    
-    for path in locations:
+   
+    for path in repositoryLocations:
         walkLocation(path)
 

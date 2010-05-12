@@ -1,8 +1,8 @@
-#File containing repository locations
-locations.txt
-
 #Length of the substring to return
-15
+Substring length: 10
 
 #Location of file to write Snort rules to
-dlp.rules
+Snort rule file: dlp.rules
+
+#Folder repository locations, prepend each with "location: "
+location: C:\Users\saintgosu\Documents\SnortDLP\
