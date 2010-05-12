@@ -7,47 +7,58 @@ Created on May 10, 2010
 import os, re
 
 class Histogram:
-    
-    def __init__(self, locFile, subLength, fileToAdd):
+
+    def __init__(self, repositoryLocations, subLength, fileToAdd):
+        """Constructor for Histogram: sets up class variables and kicks off histogram generation.
         
+        Keyword arguments:
+        repositoryLocations -- list of strings of the paths to each repository location
+        subLength -- length of the unique substring to select
+        fileToAdd -- path of the input file to generate the substring from
+        """
         # setup class variables
-        self.repositoryLocationFile = locFile
+        self.repositoryLocations = repositoryLocations
         self.substringLength = subLength
         self.histogram = dict()
         self.fileName = fileToAdd
         
-        #for .doc and other files, we need to read the file in under binary mode ('rb')
-        #otherwise the non-ascii characters mess up the viewing
-        #regex to strip out all non-ascii characters:
-        """rawFileText = open(self.fileName,'rb').read()
-        regex = re.compile("[^A-Za-z 0-9 \.,\?'""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*")
-        
-        print rawFileText[:50]
-        # replace with "" or " "? Preserve whitepace?
-        cleanText = regex.sub("",rawFileText)"""
-        
-        
+        #for .doc and other files, do we need to read the file in under binary mode ('rb')?
         self.inputText = self.standardizeText(open(self.fileName).read())
         
         #generate the histogram from the input text
         self.genHistogram()
+        
+        #add the local histogram to the global histogram table
+        self.addHistogramToGlobal()
 
     def repositoryScore(self, substring):
+        """Return a score for the substring using the repository histogram.
         
-        """
-        Input: input substring to score from repository histogram
-        Output: score of substring from repository histogram
+        Keyword arguments:
+        substring -- input substring to score
+
+        Returns:
+        The score of the substring.
         
-        ToDo: implement database connection/lookup, write the method
+        ToDo: implement database connection/lookup, implement this method
         """
         
         return 0
     
-    def inFile(self, path, substring):
-        
+    def addHistogramToGlobal(self):
+        """Add the internal histogram to the global histogram database.
+
+        ToDo: Add the local histogram frequencies to the global histogram database, implement
         """
-        Input: path of file to search through and substring to search for 
-        Output: True if substring is in standardized file text, false otherwise
+        
+        return 0
+
+    def inFile(self, path, substring):
+        """Determine if a given substring is in a specified file.
+        
+        Keyword arguments:
+        path -- path of the file to search through
+        substring -- substring to search for
         """
         
         #pull the text from the specified file and standardize the text
@@ -56,17 +67,16 @@ class Histogram:
         return substring in text
     
     def inRepository(self, substring):
+        """Check if a specific substring is in any file in the repository.
         
+        Keyword arguments:
+        substring -- substring to search the repository for
+        
+        Returns:
+        true if substring is in any file in the repository, false if not
         """
-        Input: candidate unique substring
-        Output: true if substring is in any file in the repository, false if not
-        """
-        
-        # repositoryLocationFile contains the repository locations 
-        locations = open(self.repositoryLocationFile, 'r').readlines()
-        
         # crawl the path, checking if the substring is in each file
-        for path in locations:
+        for path in self.repositoryLocations:
             for root, dirs, files in os.walk(path):
                 for file in files:
                     if root+file != self.fileName: #skip this file when searching existing repository
@@ -76,32 +86,34 @@ class Histogram:
         return False
     
     def standardizeText(self, inputText):
+        """Standardizes input text.
         
+        Keyword arguments:
+        inputText -- text string to standardize
+        
+        Returns:
+        string input text stripped of everything except letters and numbers, each word separated by a single space
+        
+        ToDo: should we use regular expressions to strip all non-ascii out?
         """
-        Input: text string to standardize
-        Output: string input text stripped of everything except letters and numbers,
-                each word separated by a single space
         
-        ToDo: more standardization, i.e. stripping out punctuation etc.
-        
-        """
+        #regex to strip out all non-ascii characters:
+        #rawFileText = open(self.fileName,'rb').read()
+        #regex = re.compile("[^A-Za-z 0-9 \.,\?'""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*")
+        #cleanText = regex.sub("",rawFileText)
         
         return " ".join(inputText.lower().split())
     
     def selectSubstring(self):
+        """Select the lowest scored substring from the input text.
         
-        """
-        Input: none
-        Output: unique substring to search for
+        Returns: unique selected substring or an empty string if a unique string is not found
         
         selectSubstring() generates a weighted local/global histogram score
         for every possible specified length substring in the input text.
         It then returns the lowest scored substring not in the repository, or
         and empty string if a substring not in the repository wasn't found.
         """
-        
-        #standardize our text and split it into a list of individual words
-        #inputText = self.standardizeText(inputText).split()
         
         alpha = 1 #weight for local histogram score
         beta = .5 #weight for repository histogram score
@@ -134,19 +146,21 @@ class Histogram:
             substring = " ".join(inputText[startLocation:startLocation+self.substringLength])
             if not self.inRepository(substring):
                 foundLow = True
-                print "Unique substring for " + self.fileName + ": " + substring
                 return substring
         
         if not foundLow:
-            print "Not found for " + self.fileName + ": consider increasing substring length"
+            print "Substring not found for " + self.fileName + ": consider increasing substring length"
         
         return ""
         
     def localScore(self, substring):
+        """Return a score of a specific substring using the local histogram.
         
-        """
-        Input: substring to score
-        Output: score S of summed frequencies of words in text
+        Keyword arguments:
+        substring -- specific substring to score
+        
+        Returns:
+        score S of summed frequencies of words in text
         """
         
         #standardize our text and split it into a list of individual words
@@ -161,9 +175,7 @@ class Histogram:
         return score
         
     def genHistogram(self):
-        
-        """
-        Generate the histogram of the inputText
+        """Generate the histogram of the inputText.
         """
         
         #split standardized input text into a list of individual words
