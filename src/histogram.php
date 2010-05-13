@@ -6,15 +6,18 @@
 	
 	function selectSubstring($useRepository, $repositoryLocations, $histogram, $inputText, $substringLength){
 		
+		/*
+		 * Return the lowest scored substring from $inputText
+		 */
+		
 		$alpha = 1; //local repository weight
 		$beta = .5; //global repository weight
 		$substringScores = array();
 		$split = explode(" ", standardizeText($inputText)); //split standardized string into words
-		
+
 		//iterate through all possible substrings of the specified length
 		for($i=0; $i < count($split) - $substringLength +1; $i++){
 			$substring = implode(" ", array_slice($split,$i,$substringLength)); //grab a substring of the correct length
-			
 			$repositoryScore = 0;
 			if($useRepository){ //trigger on the global variable that indicates if the global repository is being used
 				$repositoryScore = repositoryScore($substring);
@@ -22,7 +25,6 @@
 			$score = $alpha * localScore($histogram, $substring) + $beta * $repositoryScore;
 			$substringScores[$i] = $score;
 		}
-		
 		asort($substringScores); //sort the frequency array by value but preserve keys
 		reset($substringScores); //reset the key pointer so we can iterate correctly
 		
@@ -36,7 +38,6 @@
 				$substring = implode(" ", array_slice($split,key($substringScores),$substringLength));
 			}
 		}
-		
 		return $substring;
 	}
 	
@@ -54,7 +55,8 @@
 		/*
 		 * Return a score of a specific substring using the local histogram.
 		 */
-
+		
+		//need standardizeText() here?
 		$words = explode(" ", standardizeText($substring));
 		$score = 0;
 		
@@ -118,8 +120,9 @@
 		 * regular expression from, and place in common.php?
 		 */
 		
-		$file = fopen($path, 'r');
+		$file = fopen($path, 'r') or die("can't open $path");
 		$text = fread($file, filesize($path));
+		fclose($file);
 		$standardText = standardizeText($text);
 		
 		//if substring is found within the file, flag
@@ -131,18 +134,33 @@
 		return False;
 	}
 	
-	function addHistogramToGlobal($histogram){
+	function insertHistogramIntoDatabase($histgram){
 		
-		//implement when database brought up
+		//TODO: Correct SQL statement, probably wrong
+		
+		foreach($histogram as $word => $count){
+			$query = "INSERT INTO words VALUE $count";
+			queryDatabase($query);
+		}
 		
 		null;
 	}
 	
 	function repositoryScore($substring){
 		
-		//implement when database brought up
+		//TODO: Correct SQL statement, probably wrong
 		
-		return 1;
+		//need standardizeText() here?
+		
+		$words = explode(" ", standardizeText($substring));
+		$score = 0;
+		
+		/*
+		foreach ($words as $word){
+			$query = "SELECT $word FROM table";
+			$score += queryDatabase($query);
+		}*/
+		
+		return $score;
 	}
-	
 ?>
