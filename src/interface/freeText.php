@@ -29,9 +29,9 @@ Released   : 20100309
 		<div id="menu">
 			<ul>
 				<li><a href="index.html" class="first">Home</a></li>
-				<li class="current_page_item"><a href="freeText.html">Process Free Text</a></li>
-				<li><a href="inputFile.html">Process Input File</a></li>
-				<li><a href="repository.html">Repository Tools</a></li>
+				<li class="current_page_item"><a href="freeText.php">Process Free Text</a></li>
+				<li><a href="inputFile.php">Process Input File</a></li>
+				<li><a href="repository.php">Repository Tools</a></li>
 			</ul>
 		</div>
 		<!-- end #menu -->
@@ -41,22 +41,24 @@ Released   : 20100309
 	<div id="page">
 		<div id="content">
 		  <div class="post">
-				<h2 class="title"><a href="#">Process Free Text</a></h2>
+				<h2 class="title">Process Free Text</a></h2>
 				<div class="entry">
-					<b>Alert name: </b><input type="text" id="alertName" name="alertName" value="name"/><br><br>
-					<b>Input text: </b><br><TEXTAREA NAME=inputText ROWS=4 COLS=40></TEXTAREA><br><br>
-					<b>Repository location: </b><input type="text" value="C:/tmp"/><br><br>
-					<b>Substring length: </b><input type="text" name="substringLength" value="10" /><br><br>
-					<b>Snort output file: </b><input type="text" name="snortFile"/><br><br>
-					<b>Method of substring scoring: </b>
-						<SELECT NAME="scoringMethod">
-							<OPTION VALUE=histogram SELECTED>Histogram
-							<OPTION VALUE=modifiedhist>Modified histogram
-							<OPTION VALUE=multipleRandSamples>Multiple random samples
-							<OPTION VALUE=Random>Random
-						</SELECT>
-					<br><br>
-					<input type="submit" id="process" value="PROCESS" />
+					<form action="displayResults.php" method="post">
+						<b>Alert name: </b><input type="text" id="alertName" name="alertName" value="name"/><br><br>
+						<b>Input text: </b><br><TEXTAREA NAME=inputText ROWS=4 COLS=40></TEXTAREA><br><br>
+						<b>Repository location: </b><input type="text" value="C:/tmp"/><br><br>
+						<b>Substring length: </b><input type="text" name="substringLength" value="10" /><br><br>
+						<b>Snort output file: </b><input type="text" name="snortFile"/><br><br>
+						<b>Method of substring scoring: </b>
+							<SELECT NAME="scoringMethod">
+								<OPTION VALUE=histogram SELECTED>Histogram
+								<OPTION VALUE=modifiedhist>Modified histogram
+								<OPTION VALUE=multipleRandSamples>Multiple random samples
+								<OPTION VALUE=Random>Random
+							</SELECT>
+						<br><br>
+						<input type="submit" id="process" value="PROCESS" />
+					</form>
 			</div>
 		  </div>
 		</div><!-- end #content -->
