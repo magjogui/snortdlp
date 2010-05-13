@@ -13,7 +13,7 @@
 	$useRepository  = False;
 	$inputText = "no text entered";
 	$substringLength = 7;
-	$fileName = "no name specified";
+	$alertName = "no name specified";
 	$snortFile = "";
 	
 	//should we put this in a $_SESSION[]?
@@ -33,8 +33,8 @@
 	if (isset($_POST['substringLength']) && !empty($_POST['substringLength'])){
 		$substringLength = $_POST['substringLength'];
 	}
-	if (isset($_POST['fileName']) && !empty($_POST['fileName'])){
-		$fileName = $_POST['fileName'];
+	if (isset($_POST['alertName']) && !empty($_POST['alertName'])){
+		$alertName = $_POST['alertName'];
 	}
 	if (isset($_POST['snortFile']) && !empty($_POST['snortFile'])){
 		$snortFile = $_POST['snortFile'];
@@ -44,16 +44,7 @@
 			writeToFile($snortFile, $header);
 		}
 	}
-	
-	/*
-	print_r($repositoryLocations);
-	echo "\$useRepository = $useRepository<br>";
-	echo "\$inputText = $inputText<br>";
-	echo "\$substringLength = $substringLength<br>";
-	echo "\$fileName = $fileName<br>";
-	echo "\$snortFile = $snortFile<br>";
-	*/
-	
+
 	echo "<h2>Selected substring:</h2>";
 	$substring = selectSubstring($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
 	echo "\"$substring\"";
@@ -62,7 +53,7 @@
 	echo createRegex($substring);
 	
 	echo "<h2>Snort rule:</h2>";
-	$rule = createSnortRule(getNextsid($snortFile), $fileName, $substring);
+	$rule = createSnortRule(getNextsid($snortFile), $alertName, $substring);
 	echo "$rule<br><br>";
 	
 	if ($snortFile != ""){

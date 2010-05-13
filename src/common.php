@@ -68,6 +68,18 @@
 		return $result;
 	}
 	
+	function insertHistogramIntoDatabase($histgram){
+		
+		//TODO: Correct SQL statement, probably wrong
+		
+		foreach($histogram as $word => $count){
+			$query = "INSERT INTO words VALUE $count";
+			//queryDatabase($query);
+		}
+		
+		null;
+	}
+	
 	function getNextsid($snortFile){
 		/*
 		 * Count the lines in the snort file and return the next logical sid for snort rules

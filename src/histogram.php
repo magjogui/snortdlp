@@ -134,18 +134,6 @@
 		return False;
 	}
 	
-	function insertHistogramIntoDatabase($histgram){
-		
-		//TODO: Correct SQL statement, probably wrong
-		
-		foreach($histogram as $word => $count){
-			$query = "INSERT INTO words VALUE $count";
-			queryDatabase($query);
-		}
-		
-		null;
-	}
-	
 	function repositoryScore($substring){
 		
 		//TODO: Correct SQL statement, probably wrong
