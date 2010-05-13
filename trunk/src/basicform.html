@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Basic Input Form</title>
+</head>
+
+<script type="text/javascript">
+
+//Quick function that replaces the file name with the name from the input file location box
+function replaceFileName() { 
+	var path = document.getElementById('inputFile').value;
+	var name = path.split("/");
+	document.getElementById('fileName').value = name[name.length-1];
+}
+
+</script>
+
+<body onsubmit="replaceFileName();">
+	<h1>Snort DLP</h1> 
+	<form action="launcher.php" method="post">
+		File name: <input type="text" id="fileName" name="fileName" value="Test file"><br><br>
+		Repository location: <input type="text" name="repositoryLocations[]" value="C:/tmp"><br><br>
+		Input file location: <input type="text" id="inputFile" name="inputFile" onChange="replaceFileName()" value=""><br><br>
+		Input text: <TEXTAREA NAME=inputText ROWS=4 COLS=40>The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+		</TEXTAREA>
+		<br><br>
+		Substring length: <input type="text" name="substringLength" value="5" /><br><br>
+	<input type="submit" />
+</body>
+</html>
