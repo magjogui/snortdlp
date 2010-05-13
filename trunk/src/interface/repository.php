@@ -42,7 +42,7 @@ Released   : 20100309
 	<div id="page">
 		<div id="content">
 		  <div class="post">
-				<h2 class="title"><a href="#">Repository Tools</a></h2>
+				<h2 class="title">Repository Tools</a></h2>
 				<div class="entry">
 					<b>Define default repository locations</b><br><br>
 					<b>Process all files in repository</b><br><br>
