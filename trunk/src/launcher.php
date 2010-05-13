@@ -12,31 +12,47 @@
 	$repositoryLocations  = array();
 	$useRepository  = False;
 	$inputText = "no text entered";
-	$substringLength = 5;
+	$substringLength = 7;
 	$fileName = "no name specified";
-			
+	$snortFile = "";
+	
+	//should we put this in a $_SESSION[]?
 	if (isset($_POST['repositoryLocations']) && !empty($_POST['repositoryLocations'])){
 		$repositoryLocations = $_POST['repositoryLocations'];
 		$useRepository = True;
 	}
-	
 	if (isset($_POST['inputText']) && !empty($_POST['inputText'])){
 		$inputText = $_POST['inputText'];
 	}
-	
 	if (isset($_POST['inputFile']) && !empty($_POST['inputFile'])){
 		$path = $_POST['inputFile'];
-		$file = fopen($path, 'r');
+		$file = fopen($path, 'r') or die("can't open $path");
 		$inputText = fread($file, filesize($path));
+		fclose($file);
 	}
-	
 	if (isset($_POST['substringLength']) && !empty($_POST['substringLength'])){
 		$substringLength = $_POST['substringLength'];
 	}
-	
 	if (isset($_POST['fileName']) && !empty($_POST['fileName'])){
 		$fileName = $_POST['fileName'];
 	}
+	if (isset($_POST['snortFile']) && !empty($_POST['snortFile'])){
+		$snortFile = $_POST['snortFile'];
+		if (! file_exists($snortFile) ){
+			//if the snort output file doesn't already exist, write out the header information
+			$header = "#\n#---------------------------\n# Data Loss Prevention rules\n#---------------------------\n";
+			writeToFile($snortFile, $header);
+		}
+	}
+	
+	/*
+	print_r($repositoryLocations);
+	echo "\$useRepository = $useRepository<br>";
+	echo "\$inputText = $inputText<br>";
+	echo "\$substringLength = $substringLength<br>";
+	echo "\$fileName = $fileName<br>";
+	echo "\$snortFile = $snortFile<br>";
+	*/
 	
 	echo "<h2>Selected substring:</h2>";
 	$substring = selectSubstring($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
@@ -46,24 +62,14 @@
 	echo createRegex($substring);
 	
 	echo "<h2>Snort rule:</h2>";
-	$rule = createSnortRule(1000000, $fileName, $substring);
+	$rule = createSnortRule(getNextsid($snortFile), $fileName, $substring);
 	echo "$rule<br><br>";
 	
-	//code to test selectSubstring()
-	/*$sampleText = "accomplished through an environmental adaptive strategy";
-	$repositoryLocations = array("C:/tmp");
-
-	$lowSubstring = selectSubstring(True, $locations, genHistogram($sampleText), $sampleText, 3);
-	if ($lowSubstring == ""){
-		echo "No unique substring found";
+	if ($snortFile != ""){
+		//if snortFile was passed, write the rule out to the snort file
+		writeToFile($snortFile, $rule);
+		echo "Snort rule written to $snortFile<br><br>";
 	}
-	else{
-		echo "Lowest substring: \"$lowSubstring\"\n";
-	}*/
-	
-	/*test snort rule generation
-	echo createSnortRule(1000000, "test", "this is a test")
-	*/
 
 ?>
 </body>

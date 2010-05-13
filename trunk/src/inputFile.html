@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Basic Input Form</title>
+<title>Process Input File</title>
 </head>
 
 <script type="text/javascript">
@@ -10,20 +10,18 @@
 //Quick function that replaces the file name with the name from the input file location box
 function replaceFileName() { 
 	var path = document.getElementById('inputFile').value;
-	var name = path.split("/");
+	var name = path.split("\");
 	document.getElementById('fileName').value = name[name.length-1];
 }
 
 </script>
 
 <body onsubmit="replaceFileName();">
-	<h1>Snort DLP</h1> 
+	<h1>Snort DLP: Input File</h1> 
 	<form action="launcher.php" method="post">
 		File name: <input type="text" id="fileName" name="fileName" value="risk1.txt"/><br><br>
+		Input file location: <input type="text" id="inputFile" name="inputFile" onChange="replaceFileName()" value="C:/tmp/risk1.txt"/><br><br>
 		Repository location: <input type="text" name="repositoryLocations[]" value="C:/tmp"/><br><br>
-		Input file location: <input type="text" id="inputFile" name="inputFile" onChange="replaceFileName()" value="C:\tmp\risk1.txt"/><br><br>
-		Input text: <TEXTAREA NAME=inputText ROWS=4 COLS=40></TEXTAREA>
-		<br><br>
 		Substring length: <input type="text" name="substringLength" value="7" /><br><br>
 		Snort output file: <input type="text" name="snortFile"/><br><br>
 	<input type="submit" />

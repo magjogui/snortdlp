@@ -45,10 +45,41 @@
 		return $inputText;
 	}
 	
-	function insertHistogramInDatabase($histgram){
+	function queryDatabase($query){
+
+		/*
+		 * Connect to our specific database and pass along $query
+		 */
 		
-		//TODO: implement database methods
+		$username="username";
+		$password="password";
+		$database="database";
 		
+		$query = mysql_real_escape_string($query); //sanitize the string before passing to MySQL
+		
+		//connect to database
+		mysql_connect(localhost,$username,$password);
+		@mysql_select_db($database) or die( "Unable to select database");
+		
+		//perform the query and cleanup
+		$result = mysql_query($query);
+		mysql_close();
+		
+		return $result;
+	}
+	
+	function getNextsid($snortFile){
+		/*
+		 * Count the lines in the snort file and return the next logical sid for snort rules
+		 */
+		$sidBase = 1000000;
+		if($snortFile == ""){ //if the snort file wasn't set, return the base SID
+			return $sidBase;
+		}
+		else{
+			$lines = count(file($snortFile)) or die("can't open $snortFile");
+			return $sidBase + $lines - 5;
+		}
 	}
 	
 	function standardizeText($inputText){
@@ -64,6 +95,15 @@
 		$cleanText = trim(implode(" ", $split));
 		
 		return $cleanText;
+	}
+	
+	function writeToFile($file, $string){
+		/*
+		 * Write $string out to $file.
+		 */
+		$fh = fopen($file, 'a') or die("can't open $file");
+		fwrite($fh, $string . "\n");
+		fclose($fh);
 	}
 
 ?>

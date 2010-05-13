@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Process Free Text</title>
+</head>
+<body onsubmit="replaceFileName();">
+	<h1>Snort DLP: Free Text</h1> 
+	<form action="launcher.php" method="post">
+		File name: <input type="text" id="fileName" name="fileName" value="Insert name"/><br><br>
+		Input text: <TEXTAREA NAME=inputText ROWS=4 COLS=40></TEXTAREA><br><br>
+		Repository location: <input type="text" name="repositoryLocations[]" value="C:/tmp"/><br><br>
+		Substring length: <input type="text" name="substringLength" value="7" /><br><br>
+		Snort output file: <input type="text" name="snortFile"/><br><br>
+	<input type="submit" />
+</body>
+</html>
