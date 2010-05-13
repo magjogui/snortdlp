@@ -45,6 +45,12 @@
 		return $inputText;
 	}
 	
+	function insertHistogramInDatabase($histgram){
+		
+		//TODO: implement database methods
+		
+	}
+	
 	function standardizeText($inputText){
 		/*
 		 * Standard function to standardize a text string.
