@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Process Input File</title>
+</head>
+
+<script type="text/javascript">
+
+//Quick function that replaces the file name with the name from the input file location box
+function replaceAlertName() { 
+	var path = document.getElementById('inputFile').value;
+	var name = path.split("/");
+	document.getElementById('alertName').value = name[name.length-1];
+}
+
+</script>
+
+<body onsubmit="replaceFileName();">
+	<h1>Snort DLP: Input File</h1> 
+	<form action="launcher.php" method="post">
+		Alert name: <input type="text" id="alertName" name="fileName" value="risk1.txt"/><br><br>
+		Input file location: <input type="text" id="inputFile" name="inputFile" onChange="replaceAlertName()" value="C:/tmp/risk1.txt"/><br><br>
+		Repository location: <input type="text" name="repositoryLocations[]" value="C:/tmp"/><br><br>
+		Substring length: <input type="text" name="substringLength" value="7" /><br><br>
+		Snort output file: <input type="text" name="snortFile"/><br><br>
+		Method of substring scoring:
+		<SELECT NAME="scoringMethod">
+		    <OPTION VALUE=histogram SELECTED>Histogram
+		    <OPTION VALUE=modifiedhist>Modified histogram
+		    <OPTION VALUE=multipleRandSamples>Multiple random samples
+		    <OPTION VALUE=random>Random
+	    </SELECT>
+		<br><br>
+	<input type="submit" />
+</body>
+</html>
