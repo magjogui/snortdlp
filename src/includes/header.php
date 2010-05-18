@@ -1,10 +1,11 @@
 <div id="header">
 	<div id="menu">
 		<ul>
-			<li><a href="index.html" class="first">Home</a></li>
-			<li><a href="freeText.html">Process Free Text</a></li>
-			<li><a href="inputFile.html">Process Input File</a></li>
-			<li class="current_page_item"><a href="repository.html">Repository Tools</a></li>
+			<li><a href="index.php" class="first">Home</a></li>
+			<li><a href="freeText.php">Process Free Text</a></li>
+			<li><a href="inputFile.php">Process Input File</a></li>
+			<li><a href="repository.php">Repository Tools</a></li>
+			<li><a href="config.php">Configure</a></li>
 		</ul>
 	</div>
 	<!-- end #menu -->

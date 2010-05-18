@@ -56,10 +56,6 @@
 		
 		$query = mysql_real_escape_string($query); //sanitize the string before passing to MySQL
 		
-		//connect to database
-		mysql_connect(localhost,$username,$password);
-		@mysql_select_db($database) or die( "Unable to select database");
-		
 		//perform the query and cleanup
 		$result = mysql_query($query);
 		
@@ -73,16 +69,10 @@
 		
 		//TODO: Correct SQL statement, probably wrong
 		
-		// Connect to db
-		include("../includes/dbconnect.php");
-		
 		foreach($histogram as $word => $count){
 			$query = "INSERT INTO words VALUES (null, $count)";
-			//queryDatabase($query);
+			queryDatabase($query);
 		}
-		
-		// Close db connection
-		include("../includes/dbclose.php");
 		
 		null;
 	}
