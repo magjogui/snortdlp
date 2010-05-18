@@ -4,7 +4,7 @@
 
 	include("common.php"); //utility class
 	
-	function selectSubstring($useRepository, $repositoryLocations, $histogram, $inputText, $substringLength){
+	function selectSubstringHistogram($useRepository, $repositoryLocations, $histogram, $inputText, $substringLength){
 		
 		/*
 		 * Return the lowest scored substring from $inputText

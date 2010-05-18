@@ -35,7 +35,7 @@ Released   : 20100309
 				<h2 class="title">Process Free Text</a></h2>
 				<div class="entry">
 					<form action="displayResults.php" method="post">
-						<b>Alert name: </b><input type="text" align="right" id="alertName" name="alertName" value="name"/><br><br>
+						<b>Alert name: </b><input type="text" id="alertName" name="alertName" value="name"/><br><br>
 						<b>Input text: </b><br><TEXTAREA NAME=inputText ROWS=4 COLS=40></TEXTAREA><br><br>
 						<b>Repository location: </b><input type="text" value="C:/tmp"/><br><br>
 						<b>Substring length: </b><input type="text" name="substringLength" value="10" /><br><br>
@@ -45,7 +45,7 @@ Released   : 20100309
 								<OPTION VALUE=histogram SELECTED>Histogram
 								<OPTION VALUE=modifiedhist>Modified histogram
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
-								<OPTION VALUE=Random>Random
+								<OPTION VALUE=random>Random
 							</SELECT>
 						<br><br>
 						<input type="submit" id="process" value="PROCESS" />

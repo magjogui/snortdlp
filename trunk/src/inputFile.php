@@ -57,7 +57,7 @@ function replaceAlertName() {
 								<OPTION VALUE=histogram SELECTED>Histogram
 								<OPTION VALUE=modifiedhist>Modified histogram
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
-								<OPTION VALUE=Random>Random
+								<OPTION VALUE=random>Random
 							</SELECT>
 						<br><br>
 						<input type="submit" id="process" value="PROCESS" />
