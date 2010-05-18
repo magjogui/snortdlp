@@ -64,19 +64,10 @@ Released   : 20100309
 	</div>
 	<hr />
 	<!-- end #logo -->
-	<div id="header">
-		<div id="menu">
-			<ul>
-				<li><a href="index.html" class="first">Home</a></li>
-				<li><a href="freeText.php">Process Free Text</a></li>
-				<li><a href="inputFile.php">Process Input File</a></li>
-				<li><a href="repository.php">Repository Tools</a></li>
-			</ul>
-		</div>
-		<!-- end #menu -->
-	</div>
-	<!-- end #header -->
-	<!-- end #header-wrapper -->
+	<?php 
+		// header include
+		include("../includes/header.php");
+	?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">

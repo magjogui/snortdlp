@@ -140,14 +140,18 @@
 		
 		//need standardizeText() here?
 		
+		include("../includes/dbconnect.php");
+		
 		$words = explode(" ", standardizeText($substring));
 		$score = 0;
 		
-		/*
+		
 		foreach ($words as $word){
 			$query = "SELECT $word FROM table";
 			$score += queryDatabase($query);
-		}*/
+		}
+		
+		include("../includes/dbclose.php");
 		
 		return $score;
 	}
