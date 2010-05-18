@@ -6,6 +6,7 @@ CREATE TABLE config (
         substr_length INT,
 	snort_rules_path VARCHAR(100)
 	);
+INSERT INTO config VALUES (null, 10, 'C:/Snort/Rules/');
 CREATE TABLE sensitive_file_paths (
 	spath_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	config_id INT NOT NULL, 	
