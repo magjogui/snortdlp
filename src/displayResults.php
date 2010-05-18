@@ -19,7 +19,8 @@ Released   : 20100309
 <link href="styles/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <?php
-	include("includes/histogram.php");
+	//include("includes/histogram.php");
+	include("includes/sampling.php");
 	
 	$repositoryLocations  = array();
 	$useRepository  = False;
@@ -27,6 +28,7 @@ Released   : 20100309
 	$substringLength = 7;
 	$alertName = "no name specified";
 	$snortFile = "";
+	$scoringMethod = "histogram";
 	
 	//should we put this in a $_SESSION[]?
 	if (isset($_POST['repositoryLocations']) && !empty($_POST['repositoryLocations'])){
@@ -56,6 +58,9 @@ Released   : 20100309
 			writeToFile($snortFile, $header);
 		}
 	}
+	if (isset($_POST['scoringMethod']) && !empty($_POST['scoringMethod'])){
+		$scoringMethod = $_POST['scoringMethod'];
+	}
 ?>
 <body>
 	<div id="logo">
@@ -71,10 +76,34 @@ Released   : 20100309
 	<div id="page">
 		<div id="content">
 		  <div class="post">
+				<h2 class="title">Substring scoring method:</a></h2>
+				<div class="entry">
+					<?php
+						echo "$scoringMethod";
+					?>
+			</div>
+		  </div>
+		  <div class="post">
 				<h2 class="title">Selected Substring</a></h2>
 				<div class="entry">
 					<?php
-						$substring = selectSubstring($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+						//based on sampling method chosen, select the identifiable substring
+						switch($scoringMethod){
+							case "histogram":
+								$substring = selectSubstringHistogram($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+								break;
+							case "modifiedhist":
+								$substring = selectSubstringModifiedHistogram($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+								break;
+							case "multipleRandSamples":
+								$substring = "";
+								break;
+							case "random":
+								$substring = selectSubstringRandom($useRepository, $repositoryLocations, $inputText, $substringLength);
+								break;
+							default:
+								$substring = selectSubstringHistogram($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+						}
 						echo "\"$substring\"";
 					?>
 			</div>
