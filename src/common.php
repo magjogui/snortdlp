@@ -1,5 +1,4 @@
 <?php
-
 	// Commonly used functions, including the regex and rule generating functions
 	
 	function createSnortRule($sid, $alertName, $inputText){
@@ -51,19 +50,16 @@
 		 * Connect to our specific database and pass along $query
 		 */
 		
-		$username="username";
-		$password="password";
-		$database="database";
+		// Connect to db
+		include("/includes/dbconnect.php");
 		
 		$query = mysql_real_escape_string($query); //sanitize the string before passing to MySQL
 		
-		//connect to database
-		mysql_connect(localhost,$username,$password);
-		@mysql_select_db($database) or die( "Unable to select database");
-		
 		//perform the query and cleanup
 		$result = mysql_query($query);
-		mysql_close();
+		
+		// Close db connection
+		include("/includes/dbclose.php");
 		
 		return $result;
 	}
@@ -72,10 +68,16 @@
 		
 		//TODO: Correct SQL statement, probably wrong
 		
+		// Connect to db
+		include("/includes/dbconnect.php");
+		
 		foreach($histogram as $word => $count){
-			$query = "INSERT INTO words VALUE $count";
+			$query = "INSERT INTO words VALUES (null, $count)";
 			//queryDatabase($query);
 		}
+		
+		// Close db connection
+		include("/includes/dbclose.php");
 		
 		null;
 	}
