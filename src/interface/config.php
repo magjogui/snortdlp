@@ -13,24 +13,22 @@ Released   : 20100309
 <html xmlns="http://www.w3.org/1999/xhtml">
 <?php 
 	//Checks if post values contain text and updates if they do
-	include("../includes/dbconnect.php");
+	
 	$process = false;
 	$substr = $_POST["substr_length"];
-	$substr = mysql_real_escape_string($substr);
 	$snort_path = $_POST["snort_path"];
-	$snort_path = mysql_real_escape_string($snort_path);
 	
 	if($substr != null) {
 		if($snort_path != null){
-			
+			include("../includes/dbconnect.php");
+			$substr = mysql_real_escape_string($substr);
+			$snort_path = mysql_real_escape_string($snort_path);
 			$query = "UPDATE config SET substr_length = $substr, snort_rules_path = '$snort_path' WHERE config_id = 1";
 			mysql_query($query);
-			
+			include("../includes/dbclose.php");
 			$process = true;
 		}
-	}
-	include("../includes/dbclose.php");
-		 
+	}	 
 ?>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
