@@ -96,7 +96,10 @@
 		 * Standard function to standardize a text string.
 		 * Converts $inputText to lowercase and removes whitespace.
 		 */
-				
+		
+		//clean all non-ascii charaters from the input text
+		//$inputText = preg_replace('/[^(\x20-\x7F)]*/','', $inputText);
+		
 		//convert the string to lowercase and split on whitespace
 		$split = preg_split('/\s+/', strtolower($inputText)); 
 		
