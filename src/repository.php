@@ -1,3 +1,4 @@
+<?php include("checklogin.php")?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
 Design by Free CSS Templates
@@ -26,10 +27,7 @@ Released   : 20100309
 	</div>
 	<hr />
 	<!-- end #logo -->
-	<?php 
-		// header include
-		include("includes/header.php");
-	?>
+	<?php include("includes/header.php"); ?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">
