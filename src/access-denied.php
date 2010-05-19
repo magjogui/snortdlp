@@ -31,7 +31,8 @@ Released   : 20100309
 		  <div class="post">
 				<h2 class="title">Access Denied</a></h2>
 				<div class="entry">
-					<b>Please log in from the <a href="index.php">home page</a>.</b>
+					<b>You must be logged in to view this page.<br>
+					Please log in from the <a href="index.php">home page</a>.</b>
 			</div>
 		  </div>
 		  
