@@ -18,6 +18,22 @@ Released   : 20100309
 <meta name="description" content="" />
 <link href="styles/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
+<?php 
+	session_start();
+	$loggedin = false;
+	if(session_is_registered('user')) {
+		$loggedin = true;
+	}
+?>
+<?php 
+	$nomatch = false;
+	$wrongpass = false;
+	if($_GET["nm"] == 1){
+		$nomatch = true;
+	} elseif ($_GET["wp"] == 1){
+		$wrongpass = true;
+	}
+?>
 <body>
 	<div id="logo">
 		<h1><a href="#">PigPen</a></h1>
@@ -35,6 +51,38 @@ Released   : 20100309
 				<h2 class="title">Welcome to PigPen</a></h2>
 				<div class="entry">
 					<p>This is <strong>PigPen</strong>, an open source data loss prevention solution that utilizes Snort to detect the exfiltration of sensitive data.</p>
+					<?php 
+						if (!$loggedin){
+							include("includes/dbconnect.php");
+							$query = "SELECT * FROM users";
+							$result = mysql_query($query);
+							if(mysql_num_rows($result)>0) {
+								if($wrongpass){
+									echo "<b><font color=\"red\"><strong>Incorrect username or password.</strong></b></font><br><br>";
+								}
+								echo "<form action=\"login.php\" method=\"post\">";
+								echo "<b>Username: </b><input type=\"text\" id=\"uname\" name=\"uname\" /><br><br>";
+								echo "<b>Password: <b><input type=\"password\" id=\"pass\" name=\"pass\" /><br><br>";
+								echo "<input type=\"submit\" id=\"login\" value=\"Login\" />";
+								echo "</form>";
+							} else {
+								if($nomatch){
+									echo "<b><font color=\"red\"><strong>Passwords did not match. Please try again.</strong></b></font><br><br>";
+								}
+								echo "<form action=\"register.php\" method=\"post\">";
+								echo "<b>Username: </b><input type=\"text\" id=\"uname\" name=\"uname\" /><br><br>";
+								echo "<b>Password: <b><input type=\"password\" id=\"pass1\" name=\"pass1\" /><br><br>";
+								echo "<b>Re-type password: <b><input type=\"password\" id=\"pass2\" name=\"pass2\" /><br><br>";
+								echo "<input type=\"submit\" id=\"register\" value=\"Register\" />";
+								echo "</form>";
+							}
+							include("includes/dbclose.php");
+						} else {
+							echo "<form method=\"link\" action=\"logout.php\">";
+							echo "<input type=\"submit\" value=\"Logout\">";
+							echo "</form>";
+						}
+					?>
 			</div>
 		  </div>
 		</div><!-- end #content -->
