@@ -12,10 +12,9 @@
 	$result = mysql_query($query);
 	
 	if(mysql_num_rows($result)==1){
-		$row = mysql_fetch_array($result);
-		//session_regenerate_id();
+		session_regenerate_id();
 		session_start();
-		session_register('user', '$user');
+		session_register('user', $user);
 
 	} else {
 		header("location: index.php?wp=1");

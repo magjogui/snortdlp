@@ -12,9 +12,12 @@
 	
 	$query = "INSERT INTO users (username, password) VALUES ('$user', '$pass')";
 	
-	
 	mysql_query($query);
 	include("includes/dbclose.php");
+	
+	session_regenerate_id();
+	session_start();
+	session_register('user', $user);
 	
 	header("Location: index.php");
 
