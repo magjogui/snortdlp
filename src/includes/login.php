@@ -2,7 +2,7 @@
 
 	$pass = $_POST["pass"];
 	
-	include("includes/dbconnect.php");
+	include("dbconnect.php");
 	
 	$user=mysql_real_escape_string($_POST["uname"]);
 	$pass = md5($pass);
@@ -17,13 +17,13 @@
 		session_register('user', $user);
 
 	} else {
-		header("location: index.php?wp=1");
-		include("includes/dbclose.php");
+		header("location: ../index.php?wp=1");
+		include("dbclose.php");
 		die();
 	}
 	
-	include("includes/dbclose.php");
+	include("dbclose.php");
 	
-	header("Location: index.php");
+	header("Location: ../index.php");
 
 ?>

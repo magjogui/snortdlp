@@ -1,3 +1,10 @@
+<?php 
+	$loggedin = false;
+	session_start();
+	if(session_is_registered('user')) {
+		$loggedin = true;
+	}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
 Design by Free CSS Templates
@@ -18,13 +25,6 @@ Released   : 20100309
 <meta name="description" content="" />
 <link href="styles/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
-<?php 
-	session_start();
-	$loggedin = false;
-	if(session_is_registered('user')) {
-		$loggedin = true;
-	}
-?>
 <?php 
 	$nomatch = false;
 	$wrongpass = false;
@@ -60,7 +60,7 @@ Released   : 20100309
 								if($wrongpass){
 									echo "<b><font color=\"red\"><strong>Incorrect username or password.</strong></b></font><br><br>";
 								}
-								echo "<form action=\"login.php\" method=\"post\">";
+								echo "<form action=\"includes/login.php\" method=\"post\">";
 								echo "<b>Username: </b><input type=\"text\" id=\"uname\" name=\"uname\" /><br><br>";
 								echo "<b>Password: <b><input type=\"password\" id=\"pass\" name=\"pass\" /><br><br>";
 								echo "<input type=\"submit\" id=\"login\" value=\"Login\" />";
@@ -69,7 +69,7 @@ Released   : 20100309
 								if($nomatch){
 									echo "<b><font color=\"red\"><strong>Passwords did not match. Please try again.</strong></b></font><br><br>";
 								}
-								echo "<form action=\"register.php\" method=\"post\">";
+								echo "<form action=\"includes/register.php\" method=\"post\">";
 								echo "<b>Username: </b><input type=\"text\" id=\"uname\" name=\"uname\" /><br><br>";
 								echo "<b>Password: <b><input type=\"password\" id=\"pass1\" name=\"pass1\" /><br><br>";
 								echo "<b>Re-type password: <b><input type=\"password\" id=\"pass2\" name=\"pass2\" /><br><br>";
@@ -78,7 +78,7 @@ Released   : 20100309
 							}
 							include("includes/dbclose.php");
 						} else {
-							echo "<form method=\"link\" action=\"logout.php\">";
+							echo "<form method=\"link\" action=\"includes/logout.php\">";
 							echo "<input type=\"submit\" value=\"Logout\">";
 							echo "</form>";
 						}
