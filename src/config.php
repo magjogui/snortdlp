@@ -93,6 +93,7 @@ if ($process == true) {
 } else if ($new == true) {
 	echo "<b><font color=\"red\"><strong>Please enter the Snort rules path before creating rules.</strong></b></font><br><br>";
 }
+
 include("includes/dbconnect.php");
 $query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
 $result = mysql_query($query);
@@ -100,6 +101,8 @@ $row = mysql_fetch_array($result);
 $snort_path = $row['snort_rules_path'];
 $snort_path = substr($snort_path, 0, strlen($snort_path)-14);//removes the filename from the path a bit ugly, but it'll do for now
 ?>
+
+<b>Choose <a href="templates.php">rule templates</a></b><br><br>
 <form action="config.php" method="post">
 <b>Substring Length: </b>
 <input type="text" id="substr_length" name="substr_length"
@@ -109,8 +112,6 @@ $snort_path = substr($snort_path, 0, strlen($snort_path)-14);//removes the filen
 <input type="submit" id="upduate" value="Update" />
 
 </form>
-<br>
-<b>Choose <a href="templates.php">rule templates</a></b>
 
 <?php include("includes/dbclose.php"); ?></div>
 </div>
