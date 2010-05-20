@@ -42,6 +42,7 @@ Released   : 20100309
 						<tr><td>Source Code:</td><td><input type="checkbox" name="source" value="source"  /></td></tr>
 						<tr><td>Medical Data:</td><td><input type="checkbox" name="medical" value="medical"  /></td></tr>
 						</table>
+						<br>
 						<input type="submit" id="submit" value="submit" />
 					</form>
 			</div>
