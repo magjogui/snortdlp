@@ -1,5 +1,6 @@
 <?php
-	include("common.php"); //utility class
+	//common is already called by including the histogram.php class
+	//include("common.php"); //utility class
 	include("histogram.php");
 	
 	

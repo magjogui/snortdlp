@@ -16,10 +16,18 @@ Released   : 20100309
 	//Checks if post values contain text and updates if they do
 	
 	$process = false;
+	$path_error = false;
 	$substr = $_POST["substr_length"];
 	$snort_path = $_POST["snort_path"];
 	
-	if($substr != null) {
+	// Checks to make sure the inputted path is valid and exists
+	if($snort_path{strlen($snort_path)-1} != "/"){
+		$snort_path = $snort_path . "/";
+		if(realpath($snort_path) == false){
+			$path_error = true;
+		}
+	}
+	if($substr != null AND $path_error != true) {
 		if($snort_path != null){
 			include("includes/dbconnect.php");
 			$substr = mysql_real_escape_string($substr);
@@ -28,6 +36,15 @@ Released   : 20100309
 			mysql_query($query);
 			include("includes/dbclose.php");
 			$process = true;
+			
+			$filename = $snort_path . "snortdlp.rules";
+			if (!file_exists($filename)) {
+				$file_handle = fopen($filename, 'w') or die("can't open file!");
+				fwrite($file_handle, "********************************************\n");
+				fwrite($file_handle, "*              SnortDLP Rules              *\n");
+				fwrite($file_handle, "********************************************\n");
+				fclose($file_handle);
+			}
 		}
 	}	 
 ?>
@@ -57,6 +74,8 @@ Released   : 20100309
 					<?php 
 						if ($process == true) {
 							echo "<b><font color=\"red\"><strong>Updated completed successfully</strong></b></font><br><br>";
+						} else if ($path_error == true) {
+							echo "<b><font color=\"red\"><strong>Error: Path does not exist! Please enter a valid path name.</strong></b></font><br><br>";
 						}
 						include("includes/dbconnect.php");
 						$query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
