@@ -36,8 +36,6 @@ Released   : 20100309
 						<b>Alert name: </b><input type="text" id="alertName" name="alertName" value="name"/><br><br>
 						<b>Input text: </b><br><TEXTAREA NAME=inputText ROWS=4 COLS=40></TEXTAREA><br><br>
 						<b>Repository location: </b><input type="text" value="C:/tmp"/><br><br>
-						<b>Substring length: </b><input type="text" name="substringLength" value="10" /><br><br>
-						<b>Snort output file: </b><input type="text" name="snortFile"/><br><br>
 						<b>Method of substring scoring: </b>
 							<SELECT NAME="scoringMethod">
 								<OPTION VALUE=histogram SELECTED>Histogram

@@ -87,7 +87,7 @@ if($substr != null AND $snort_path != null AND $path_error != true) {
 <h2 class="title">Configuration</a></h2>
 <div class="entry"><?php 
 if ($process == true) {
-	echo "<b><font color=\"red\"><strong>Updated completed successfully</strong></b></font><br><br>";
+	echo "<b><font color=\"blue\"><strong>Updated completed successfully.</strong></b></font><br><br>";
 } else if ($path_error == true) {
 	echo "<b><font color=\"red\"><strong>Error: Path does not exist! Please enter a valid path name.</strong></b></font><br><br>";
 } else if ($new == true) {
@@ -109,6 +109,9 @@ $snort_path = substr($snort_path, 0, strlen($snort_path)-14);//removes the filen
 <input type="submit" id="upduate" value="Update" />
 
 </form>
+<br>
+<b>Choose <a href="templates.php">rule templates</a></b>
+
 <?php include("includes/dbclose.php"); ?></div>
 </div>
 </div>
