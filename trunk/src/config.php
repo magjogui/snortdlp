@@ -44,6 +44,7 @@ Released   : 20100309
 				fwrite($file_handle, "*              SnortDLP Rules              *\n");
 				fwrite($file_handle, "********************************************\n");
 				fclose($file_handle);
+				chmod($filename, 0644);
 			}
 		}
 	}	 
