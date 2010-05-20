@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS config;
 DROP TABLE IF EXISTS sensitive_file_paths;
 DROP TABLE IF EXISTS words;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS rules;
 CREATE TABLE config (
         config_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         substr_length INT,
@@ -22,4 +23,8 @@ CREATE TABLE users (
         user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(50),
 	password VARCHAR(50)
+	);
+CREATE TABLE rules (
+	rule_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	rule VARCHAR(300)
 	);

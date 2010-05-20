@@ -19,18 +19,6 @@ Released   : 20100309
 <meta name="description" content="" />
 <link href="styles/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
-
-<script type="text/javascript">
-
-//Quick function that replaces the file name with the name from the input file location box
-function replaceAlertName() { 
-	var path = document.getElementById('inputFile').value;
-	var name = path.split("/");
-	document.getElementById('alertName').value = name[name.length-1];
-}
-
-</script>
-
 <body>
 	<div id="logo">
 		<h1><a href="#">PigPen</a></h1>
@@ -42,22 +30,12 @@ function replaceAlertName() {
 	<div id="page">
 		<div id="content">
 		  <div class="post">
-				<h2 class="title">Process Input File</a></h2>
+				<h2 class="title">Generate Snort Rules</a></h2>
 				<div class="entry">
-					<form action="displayResults.php" method="post">
-						<b>Alert name: </b><input type="text" id="alertName" name="alertName" value="risk1.txt"/><br><br>
-						<b>Input file location: <b><input type="text" id="inputFile" name="inputFile" onChange="replaceAlertName()" value="C:/tmp/risk1.txt"/><br><br>
-						<b>Repository location: </b><input type="text" value="C:/tmp"/><br><br>
-						<b>Method of substring scoring: </b>
-							<SELECT NAME="scoringMethod">
-								<OPTION VALUE=histogram SELECTED>Histogram
-								<OPTION VALUE=modifiedhist>Modified histogram
-								<OPTION VALUE=multipleRandSamples>Multiple random samples
-								<OPTION VALUE=random>Random
-							</SELECT>
-						<br><br>
-						<input type="submit" id="process" value="PROCESS" />
-					</form>
+					<a href="freeText.php"><b>Free Text</b></a><br><br>
+					<a href="inputFile.php"><b>Individual Files</b></a><br><br>
+					<a href="folderPath.php"><b>Entire Folders</b></a><br><br>
+					<a href="database.php"><b>Database Tables</b></a><br><br>
 			</div>
 		  </div>
 		</div><!-- end #content -->

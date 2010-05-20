@@ -31,6 +31,24 @@ Released   : 20100309
 	$snortFile = "";
 	$scoringMethod = "histogram";
 	
+	include("includes/dbconnect.php");
+	//gets the snort rules file
+	$query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
+	$result = mysql_query($query);
+	$num_rows = mysql_num_rows($result);
+	
+	//checks if the user has configured the snort rule path
+	if($num_rows!=1){
+		header("location: config?new=1");
+		die();
+	}
+	
+	//sets variables to db values
+	$row = mysql_fetch_array($result);
+	$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
+	$substringLength = $row['substr_length']; //sets the substringLength to length from db
+	include("includes/dbclose.php");
+	
 	//should we put this in a $_SESSION[]?
 	if (isset($_POST['repositoryLocations']) && !empty($_POST['repositoryLocations'])){
 		$repositoryLocations = $_POST['repositoryLocations'];
@@ -45,42 +63,10 @@ Released   : 20100309
 		$inputText = fread($file, filesize($path));
 		fclose($file);
 	}
-	/**
-	if (isset($_POST['substringLength']) && !empty($_POST['substringLength'])){
-		$substringLength = $_POST['substringLength'];
-	}
-	*/
-	
-	include("includes/dbconnect.php");
-	//gets the snort rules file
-	$query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
-	$result = mysql_query($query);
-	$num_rows = mysql_num_rows($result);
-	
-	//checks if the user has configured the snort rule path
-	if($num_rows!=1){
-		header("location: config?new=1");
-		die();
-	}
-	
-	$row = mysql_fetch_array($result);
-	$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
-	$substringLength = $row['substr_length']; //sets the substringLength to length from db
-	include("includes/dbclose.php");
 	
 	if (isset($_POST['alertName']) && !empty($_POST['alertName'])){
 		$alertName = $_POST['alertName'];
 	}
-	/**
-	if (isset($_POST['snortFile']) && !empty($_POST['snortFile'])){
-		$snortFile = $_POST['snortFile'];
-		if (! file_exists($snortFile) ){
-			//if the snort output file doesn't already exist, write out the header information
-			$header = "#\n#---------------------------\n# Data Loss Prevention rules\n#---------------------------\n";
-			writeToFile($snortFile, $header);
-		}
-	}
-	*/
 	
 	if (isset($_POST['scoringMethod']) && !empty($_POST['scoringMethod'])){
 		$scoringMethod = $_POST['scoringMethod'];
