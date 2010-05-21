@@ -42,7 +42,7 @@ function replaceAlertName() {
 	<div id="page">
 		<div id="content">
 		  <div class="post">
-				<h2 class="title">Process Input File</a></h2>
+				<h2 class="title">Process New File</a></h2>
 				<div class="entry">
 					<form action="displayResults.php" method="post">
 						<table>
@@ -58,9 +58,11 @@ function replaceAlertName() {
 							<td align="right"><input type="submit" id="create" value="Create" /></td></tr>
 						</table>						
 					</form>
-					<br><br>
+					<br><br><br>
+					<h2 class="title">Manage Protected Files</a></h2>
+					<br>
 					<table>
-					<tr><td><b>File</b></td><td><b>Action</b></td></tr>
+					<tr><td><b>File</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
@@ -68,7 +70,7 @@ function replaceAlertName() {
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-						echo "<tr><td><b>" . $row['file_name'] . "</b></td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a></td></tr>";
+						echo "<tr><td width=\"250\">" . $row['file_name'] . "</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 					
 						}					
 						include("includes/dbclose.php"); 
