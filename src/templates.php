@@ -32,7 +32,7 @@ Released   : 20100309
 		  <div class="post">
 				<h2 class="title">Templates</a></h2>
 				<div class="entry">
-					<form action="config.php" method="post">
+					<form action="templates.php" method="post">
 						<table>
 						<tr><td><strong>Template</strong></td><td><strong>Use</strong></td></tr>
 						<tr><td>Social Security Numbers:</td><td><input type="checkbox" name="SSN" value="SSN"  /></td></tr>
