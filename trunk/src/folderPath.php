@@ -33,7 +33,8 @@ Released   : 20100309
 				<h2 class="title">Process Entire Folder Paths</a></h2>
 				<div class="entry">
 					TODO: create fields to input network paths of sensitive folders, display list of current ones and add a delete/modify button<br>
-					Also, create a checkbox next to each for "include subfolders".
+					Also, create a checkbox next to each for "include subfolders".<br><br>
+					
 			</div>
 		  </div>
 		</div><!-- end #content -->

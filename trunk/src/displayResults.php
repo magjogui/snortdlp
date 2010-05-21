@@ -27,7 +27,7 @@ Released   : 20100309
 	$useRepository  = False;
 	$inputText = "no text entered";
 	$substringLength = 7;
-	$alertName = "no name specified";
+	$fileName = "no name specified";
 	$snortFile = "";
 	$scoringMethod = "histogram";
 	
@@ -57,15 +57,27 @@ Released   : 20100309
 	if (isset($_POST['inputText']) && !empty($_POST['inputText'])){
 		$inputText = $_POST['inputText'];
 	}
-	if (isset($_POST['inputFile']) && !empty($_POST['inputFile'])){
-		$path = $_POST['inputFile'];
-		$file = fopen($path, 'r') or die("can't open $path");
-		$inputText = fread($file, filesize($path));
-		fclose($file);
+	
+	if (isset($_POST['fileName']) && !empty($_POST['fileName'])){
+		$fileName = $_POST['fileName'];
 	}
 	
-	if (isset($_POST['alertName']) && !empty($_POST['alertName'])){
-		$alertName = $_POST['alertName'];
+	if (isset($_POST['location']) && !empty($_POST['location'])){
+		$path = $_POST['location'];
+		
+		// Checks to make sure the inputted path is valid and exists
+		if($path{strlen($path)-1} != "/"){
+			$path = $path . "/";
+			if(realpath($path) == false){
+				$path_error = true;
+			}
+		}
+		
+		$completeFile = $path . $fileName;
+		
+		$file = fopen($completeFile, 'r') or die("can't open $completeFile");
+		$inputText = fread($file, filesize($completeFile));
+		fclose($file);
 	}
 	
 	if (isset($_POST['scoringMethod']) && !empty($_POST['scoringMethod'])){
@@ -127,7 +139,7 @@ Released   : 20100309
 				<h2 class="title">Snort Rule</a></h2>
 				<div class="entry">
 					<?php
-						$rule = createSnortRule(getNextsid($snortFile), $alertName, $substring);
+						$rule = createSnortRule(getNextsid($snortFile), $fileName, $substring);
 						echo $rule . "<br><br>";
 						
 						if ($snortFile != ""){
@@ -135,6 +147,13 @@ Released   : 20100309
 							writeToFile($snortFile, $rule);
 							echo "Snort rule written to $snortFile<br><br>";
 						}
+						//writes file to the database
+						include("includes/dbconnect.php");
+						$completeFile = mysql_real_escape_string($completeFile);
+						$rule = mysql_real_escape_string($rule);
+						$query = "INSERT INTO rules (file_name, rule) VALUES ('$completeFile', '$rule')";
+						mysql_query($query);
+						include("includes/dbclose.php"); 
 					?>		
 			</div>
 		  </div>
