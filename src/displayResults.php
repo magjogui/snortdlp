@@ -22,9 +22,7 @@ Released   : 20100309
 <?php 
 	//include("includes/histogram.php");
 	include("includes/sampling.php");
-	
-	$repositoryLocations  = array();
-	$useRepository  = False;
+
 	$inputText = "no text entered";
 	$substringLength = 7;
 	$fileName = "no name specified";
@@ -50,10 +48,10 @@ Released   : 20100309
 	include("includes/dbclose.php");
 	
 	//should we put this in a $_SESSION[]?
-	if (isset($_POST['repositoryLocations']) && !empty($_POST['repositoryLocations'])){
+	/*if (isset($_POST['repositoryLocations']) && !empty($_POST['repositoryLocations'])){
 		$repositoryLocations = $_POST['repositoryLocations'];
 		$useRepository = True;
-	}
+	}*/
 	if (isset($_POST['inputText']) && !empty($_POST['inputText'])){
 		$inputText = $_POST['inputText'];
 	}
@@ -109,19 +107,19 @@ Released   : 20100309
 						//based on sampling method chosen, select the identifiable substring
 						switch($scoringMethod){
 							case "histogram":
-								$substring = selectSubstringHistogram($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+								$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
 								break;
 							case "modifiedhist":
-								$substring = selectSubstringModifiedHistogram($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+								$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
 								break;
 							case "multipleRandSamples":
 								$substring = "";
 								break;
 							case "random":
-								$substring = selectSubstringRandom($useRepository, $repositoryLocations, $inputText, $substringLength);
+								$substring = selectSubstringRandom($inputText, $substringLength);
 								break;
 							default:
-								$substring = selectSubstringHistogram($useRepository, $repositoryLocations, genHistogram($inputText), $inputText, $substringLength);
+								$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
 						}
 						echo "\"$substring\"";
 					?>
@@ -156,6 +154,7 @@ Released   : 20100309
 						$query = "INSERT INTO rules (file_name, rule, type, count) VALUES ('$completeFile', '$rule', 1, 1)";
 						mysql_query($query);
 						include("includes/dbclose.php"); 
+						
 					?>		
 			</div>
 		  </div>
