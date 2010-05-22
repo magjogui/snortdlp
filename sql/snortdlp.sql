@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS rules;
+DROP TABLE IF EXISTS words;
 DROP TABLE IF EXISTS config;
 DROP TABLE IF EXISTS folders;
 DROP TABLE IF EXISTS db_names;
@@ -8,10 +9,11 @@ CREATE TABLE config (
         substr_length INT,
 	snort_rules_path VARCHAR(100)
 	);
-INSERT INTO config VALUES (null, 10, '/etc/snort/rules/');
-CREATE TABLE folders (
-	folder_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	path VARCHAR(200)
+INSERT INTO config VALUES (null, 10, '/etc/snort/rules/snortdlp.rules');
+CREATE TABLE words (
+	word_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	word VARCHAR(50),
+	count INT
 	);
 CREATE TABLE users (
         user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -28,8 +30,9 @@ CREATE TABLE db_names (
 	);
 CREATE TABLE rules (
 	rule_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	folder_id INT,
 	file_name VARCHAR(200),
+	path VARCHAR(200),
 	rule VARCHAR(300),
-	FOREIGN KEY (folder_id) REFERENCES folders(folder_id)
+	count INT,
+	type INT
 	);

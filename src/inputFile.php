@@ -66,7 +66,7 @@ function replaceAlertName() {
 					<?php 
 						include("includes/dbconnect.php");
 						
-						$query = "SELECT rule_id, file_name FROM rules WHERE folder_id IS NULL";
+						$query = "SELECT rule_id, file_name FROM rules WHERE type = 1";
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){

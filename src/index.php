@@ -61,19 +61,23 @@ Released   : 20100309
 									echo "<b><font color=\"red\"><strong>Incorrect username or password.</strong></b></font><br><br>";
 								}
 								echo "<form action=\"includes/login.php\" method=\"post\">";
-								echo "<b>Username: </b><input type=\"text\" id=\"uname\" name=\"uname\" /><br><br>";
-								echo "<b>Password: <b><input type=\"password\" id=\"pass\" name=\"pass\" /><br><br>";
-								echo "<input type=\"submit\" id=\"login\" value=\"Login\" />";
+								echo "<table>";
+								echo "<tr><td><b>Username: </b></td><td><input type=\"text\" id=\"uname\" name=\"uname\" /></td></tr>";
+								echo "<tr><td><b>Password: <b></td><td><input type=\"password\" id=\"pass\" name=\"pass\" /></td></tr>";
+								echo "<tr><td><input type=\"submit\" id=\"login\" value=\"Login\" /></td></tr>";
+								echo "</table>";
 								echo "</form>";
 							} else {
 								if($nomatch){
 									echo "<b><font color=\"red\"><strong>Passwords did not match. Please try again.</strong></b></font><br><br>";
 								}
 								echo "<form action=\"includes/register.php\" method=\"post\">";
-								echo "<b>Username: </b><input type=\"text\" id=\"uname\" name=\"uname\" /><br><br>";
-								echo "<b>Password: <b><input type=\"password\" id=\"pass1\" name=\"pass1\" /><br><br>";
-								echo "<b>Re-type password: <b><input type=\"password\" id=\"pass2\" name=\"pass2\" /><br><br>";
-								echo "<input type=\"submit\" id=\"register\" value=\"Register\" />";
+								echo "<table>";
+								echo "<tr><td><b>Username: </b></td><td><input type=\"text\" id=\"uname\" name=\"uname\" /></td></tr>";
+								echo "<tr><td><b>Password: <b></td><td><input type=\"password\" id=\"pass1\" name=\"pass1\" /></td></tr>";
+								echo "<tr><td><b>Re-type password: <b></td><td><input type=\"password\" id=\"pass2\" name=\"pass2\" /></td></tr>";
+								echo "<tr><td><input type=\"submit\" id=\"register\" value=\"Register\" /></td></tr>";
+								echo "</table>";
 								echo "</form>";
 							}
 							include("includes/dbclose.php");

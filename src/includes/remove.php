@@ -1,5 +1,5 @@
 <?php
-	
+	include("common.php");
 	$type = $_GET["type"];
 	$id = $_GET["id"];
 	
@@ -22,40 +22,35 @@
 		//deletes the record for this file
 		$query = "DELETE FROM rules WHERE rule_id = $id";
 		mysql_query($query);
-		include("dbclose.php");
 		
-		//reads all the lines of the file and searches for rule to delete
-		$file_handle = fopen($snort_path, 'r');
-		$text = fread($file_handle, filesize($snort_path));
-		fclose($file_handle);
 		
-		//creates an array based on a new line
-		$lines = explode("\n", $text);
-		$line_num = 0;
-		foreach ($lines as $line){
-			if ($line == $rule){
-				break;
-			}
-			$line_num++;
-		}
-		unset($line);
-		
-		//deletes the rule
-		unset($lines["$line_num"]);
-		
-		//writes back to the file
+		//gets the rule used for this file
+		$query = "SELECT rule FROM rules";
+		$result = mysql_query($query);
 		$file_handle = fopen($snort_path, 'w+');
-		foreach($lines as $line){
-			fwrite($file_handle, $line . "\n");
-		}
-		unset($line);
 		
+		//writes header
+		fwrite($file_handle, "********************************************\n");
+		fwrite($file_handle, "*              SnortDLP Rules              *\n");
+		fwrite($file_handle, "********************************************\n");
+		
+		//re-writes all rules from the db
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			fwrite($file_handle, $row['rule']);
+		}
+		
+		//closes db connection
+		include("dbclose.php");
 		//closes the file
 		fclose($file_handle);
 		
+		//include("dbclose.php");
+		
+		//rewriteRulesFile();
+		
 		//returns to inputFile.php
 		header("location: ../inputFile.php");
-		die();
+		//die();
 	}
 	
 ?>

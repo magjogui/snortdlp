@@ -150,8 +150,10 @@ Released   : 20100309
 						//writes file to the database
 						include("includes/dbconnect.php");
 						$completeFile = mysql_real_escape_string($completeFile);
+						$path = mysql_real_escape_string($path);
+						$fileName = mysql_real_escape_string($fileName);
 						$rule = mysql_real_escape_string($rule);
-						$query = "INSERT INTO rules (file_name, rule) VALUES ('$completeFile', '$rule')";
+						$query = "INSERT INTO rules (file_name, rule, type, count) VALUES ('$completeFile', '$rule', 1, 1)";
 						mysql_query($query);
 						include("includes/dbclose.php"); 
 					?>		

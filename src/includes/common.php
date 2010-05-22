@@ -117,5 +117,31 @@
 		fwrite($fh, $string . "\n");
 		fclose($fh);
 	}
+	/**
+	 * TODO: Fix this method (this code works in another file, not sure why it doesn't work here
+	 */
+	function rewriteRulesFile(){
+		
+		include("dbconnect.php");
+		//gets the rule used for this file
+		$query = "SELECT rule FROM rules";
+		$result = mysql_query($query);
+		$file_handle = fopen($snort_path, 'w+');
+		
+		//writes header
+		fwrite($file_handle, "********************************************\n");
+		fwrite($file_handle, "*              SnortDLP Rules              *\n");
+		fwrite($file_handle, "********************************************\n");
+		
+		//re-writes all rules from the db
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			fwrite($file_handle, $row['rule']);
+		}
+		
+		//closes db connection
+		include("dbclose.php");
+		//closes the file
+		fclose($file_handle);
+	}
 
 ?>
