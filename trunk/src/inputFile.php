@@ -39,6 +39,7 @@ function replaceAlertName() {
 	<hr />
 	<!-- end #logo -->
 	<?php include("includes/header.php"); ?>
+	<?php include("includes/common.php"); ?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">
@@ -46,8 +47,8 @@ function replaceAlertName() {
 				<div class="entry">
 					<form action="displayResults.php" method="post">
 						<table>
-						<tr><td><b>Location: <b><input type="text" id="location" name="location" onChange="replaceAlertName()" value="C:/tmp/risk1.txt"/></td>
-						<td><b>Name: </b><input type="text" id="fileName" name="fileName" value="risk1.txt"/></td></tr>
+						<tr><td><b>Location: <b><input type="text" id="location" name="location" onChange="replaceAlertName()" value="/home/"/></td>
+						<td><b>Name: </b><input type="text" id="fileName" name="fileName" value="test.txt"/></td></tr>
 						<tr><td><b>Method: </b>
 							<SELECT NAME="scoringMethod">
 								<OPTION VALUE=histogram SELECTED>Histogram
@@ -70,10 +71,12 @@ function replaceAlertName() {
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-						echo "<tr><td width=\"250\">" . $row['file_name'] . "</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+							echo "<tr><td width=\"250\">" . $row['file_name'] . "</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 					
 						}					
 						include("includes/dbclose.php"); 
+						
+						
 					?>
 					</table>
 			</div>

@@ -49,6 +49,8 @@
 
 		/*
 		 * Connect to our specific database and pass along $query
+		 * 
+		 * ... used? should we remove? TODO
 		 */
 		
 		// Connect to db
@@ -65,16 +67,33 @@
 		return $result;
 	}
 	
-	function insertHistogramIntoDatabase($histgram){
-		
-		//TODO: Correct SQL statement, probably wrong
+	function insertHistogramIntoDatabase($histogram){
+		//TODO: make this cleaner, find a better way to do this
+
+		include("includes/dbconnect.php");
 		
 		foreach($histogram as $word => $count){
-			$query = "INSERT INTO words VALUES (null, $count)";
-			queryDatabase($query);
+			$existing = false;
+			$word = mysql_real_escape_string($word); //should we do this??? TODO
+			
+			$query = "SELECT count FROM words WHERE word=\"$word\"";
+			$result = mysql_query($query);
+			
+			while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+				$count += $row['count'];
+				$existing = true;
+			}
+			
+			if($existing){ //messy ... better way to do this?
+				$query = "UPDATE words SET count=$count WHERE word='$word'";
+			}
+			else{
+				$query = "INSERT INTO words (word, count) VALUES ('$word', $count)";
+			}
+
+			mysql_query($query);
 		}
-		
-		null;
+		include("includes/dbclose.php"); 
 	}
 	
 	function getNextsid($snortFile){
@@ -142,6 +161,118 @@
 		include("dbclose.php");
 		//closes the file
 		fclose($file_handle);
+	}
+	
+	function inRepository($substring){
+		// TODO: CHECK THE ACCURACY OF THIS!!!
+		
+		$repositoryLocations = returnRepositoryLocations();
+		
+		//TODO: how to properly handle this?
+		if (count($repositoryLocations) == 0){
+			//repository array empty
+			return False;
+		}
+		
+		foreach ($repositoryLocations as $location){
+			if (inFile($location, $substring)){
+				return True;
+			}
+		}
+		
+		return False;		
+	}
+	
+	function inDirectory($startingDirectory, $substring){
+		/*
+		 * Crawl a directory, searching each file for the specific substring. 
+		 * 
+		 * Not used anymore.... remove? TODO
+		 */
+		
+		if($dObj = dir($startingDirectory)) {
+			while($thisEntry = $dObj->read()) { 
+				if ($thisEntry != "." && $thisEntry != "..") {
+					$path = "$startingDirectory/$thisEntry";
+					//Check if the substring is in the specific file
+					if (inFile($path, $substring)){
+						return True;
+					}
+					
+					// If the entry is a directory, recursively call our function on it
+					if(($thisEntry != 0) && is_dir($startingDirectory/$thisEntry)){
+						inDirectory("$startingDirectory/$thisEntry", $substring);
+					} 
+				} else { 
+						//ignore "." and ".." to prevent an infinite loop
+				}
+			}
+		}
+		return False;
+	}
+	
+	function inFile($path, $substring){
+		/*
+		 * If substring is found in the specified file, return True.
+		 * Otherwise, return false. 
+		 * 
+		 * Possibly rewrite this to pass a string that we build a 
+		 * regular expression from, and place in common.php?
+		 */
+		
+		$file = fopen($path, 'r') or die("can't open $path");
+		$text = fread($file, filesize($path));
+		fclose($file);
+		$standardText = standardizeText($text);
+		
+		//if substring is found within the file, flag
+		if (strripos($standardText,$substring)){
+			#echo "Found \"$substring\" in \"$path\"\n";
+			return True;
+		}
+		
+		return False;
+	}
+	
+	function repositoryScore($substring){
+		
+		//TODO: Correct SQL statement, probably wrong
+		
+		//need standardizeText() here?
+		include("dbconnect.php");
+		
+		$words = explode(" ", standardizeText($substring));
+		$score = 0;
+		
+		foreach ($words as $word){
+			$query = "SELECT word_id, word, count FROM words WHERE word=\"$word\"";
+			$result = mysql_query($query);
+			while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+				$score += $row['count'];
+			}
+		}
+		include("dbclose.php");
+		
+		return $score;
+	}
+	
+	function returnRepositoryLocations(){
+		
+		$locations = array();
+		
+		include("dbconnect.php");
+		//gets the rule used for this file
+		$query = "SELECT file_name FROM rules";
+		$result = mysql_query($query);
+		
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			array_push($locations, $row['file_name']);
+		}
+		
+		//closes db connection
+		include("dbclose.php");
+		
+		return $locations;
 	}
 
 ?>
