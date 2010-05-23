@@ -20,7 +20,6 @@ Released   : 20100309
 <link href="styles/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 <?php 
-	//include("includes/histogram.php");
 	include("includes/sampling.php");
 
 	$inputText = "no text entered";
@@ -47,11 +46,6 @@ Released   : 20100309
 	$substringLength = $row['substr_length']; //sets the substringLength to length from db
 	include("includes/dbclose.php");
 	
-	//should we put this in a $_SESSION[]?
-	/*if (isset($_POST['repositoryLocations']) && !empty($_POST['repositoryLocations'])){
-		$repositoryLocations = $_POST['repositoryLocations'];
-		$useRepository = True;
-	}*/
 	if (isset($_POST['inputText']) && !empty($_POST['inputText'])){
 		$inputText = $_POST['inputText'];
 	}
