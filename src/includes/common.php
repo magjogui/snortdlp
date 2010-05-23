@@ -1,7 +1,6 @@
 <?php
+	// Commonly used functions, including the regex and rule generating functions	
 
-	// Commonly used functions, including the regex and rule generating functions
-	
 	function createSnortRule($sid, $alertName, $inputText){
 		/*
 		 * Given a sid, name and input text, return a Snort rule
@@ -273,6 +272,77 @@
 		include("dbclose.php");
 		
 		return $locations;
+	}
+	
+	function processFolder($startingDirectory, $includeSubfolders, $scoringMethod, $substringLength, $snortFile){
+		/*
+		 * Crawl a directory a process each file found.
+		 * 
+		 * Used by folderPath.php
+		 */
+		if($dObj = dir($startingDirectory)) {
+			while($thisEntry = $dObj->read()) { 
+				if ($thisEntry != "." && $thisEntry != "..") {
+					$path = "$startingDirectory/$thisEntry";
+					
+					//process the file we found
+					processFile($path, $scoringMethod, $substringLength, $snortFile);
+					
+					// If we are processing subdirectories and the entry is a directory, recursively call our function on it
+					if( ($includeSubfolders) && ($thisEntry != 0) && is_dir($startingDirectory/$thisEntry)){
+						processFolder("$startingDirectory/$thisEntry", $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+					} 
+				} else { 
+						//ignore "." and ".." to prevent an infinite loop
+				}
+			}
+		}
+	}
+	
+	function processFile($path, $scoringMethod, $substringLength, $snortFile){
+		
+		/*
+		 * Process an individual filepath.
+		 */
+		$file = fopen($path, 'r') or die("can't open $path");
+		$substring = "";
+		$inputText = fread($file, filesize($path));
+		fclose($file);
+		/*
+		switch($scoringMethod){
+			case "histogram":
+				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+				break;
+			case "modifiedhist":
+				$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
+				break;
+			case "multipleRandSamples":
+				$substring = "";
+				break;
+			case "random":
+				$substring = selectSubstringRandom($inputText, $substringLength);
+				break;
+			default:
+				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+		}
+		$rule = createSnortRule(getNextsid($snortFile), $path, $substring);
+		
+		if ($snortFile != ""){
+			//if snortFile was passed, write the rule out to the snort file
+			writeToFile($snortFile, $rule);
+		}
+		
+		//writes file to the database
+		include("dbconnect.php");
+		$completeFile = mysql_real_escape_string($completeFile);
+		$path = mysql_real_escape_string($path);
+		$fileName = mysql_real_escape_string($fileName);
+		$rule = mysql_real_escape_string($rule);
+		$query = "INSERT INTO rules (file_name, rule, type, count) VALUES ('$completeFile', '$rule', 1, 1)";
+		mysql_query($query);
+		include("dbclose.php"); 
+		*/
+		return;
 	}
 
 ?>
