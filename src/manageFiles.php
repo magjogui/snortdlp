@@ -19,18 +19,6 @@ Released   : 20100309
 <meta name="description" content="" />
 <link href="styles/style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
-
-<script type="text/javascript">
-
-//Quick function that replaces the file name with the name from the input file location box
-function replaceAlertName() { 
-	var path = document.getElementById('inputFile').value;
-	var name = path.split("/");
-	document.getElementById('alertName').value = name[name.length-1];
-}
-
-</script>
-
 <body>
 	<div id="logo">
 		<h1><a href="#">PigPen</a></h1>
@@ -39,18 +27,37 @@ function replaceAlertName() {
 	<hr />
 	<!-- end #logo -->
 	<?php include("includes/header.php"); ?>
-	<?php include("includes/common.php"); ?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">
 				<h2 class="title">Manage Protected Files</a></h2>
 				<div class="entry">
+					<form action="manageFiles.php" method="post"> 
+						<table>
+						<tr><td><b>Search: </b><input type="text" id="searchName" name="searchName" /></td>
+						<td><input type="submit" id="find" value="Search" /></td></tr>
+						</table>
+					</form>
+					<?php $searchTerm = $_POST["searchName"]; 
+					if ($searchTerm != null){
+						echo "<br>";
+						echo "<font color=\"blue\">Search for \"<b>$searchTerm</b>\"</font>";
+						echo "<br>";
+						echo "<br>";
+					}
+					?>
 					<table>
 					<tr><td><b>File</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
-						$query = "SELECT rule_id, file_name FROM rules WHERE type = 1";
+						if ($searchTerm != null){
+							$searchTerm = mysql_real_escape_string($searchTerm);
+						} else {
+							$searchTerm = "";
+						}
+						
+						$query = "SELECT rule_id, file_name FROM rules WHERE file_name LIKE '%$searchTerm%'"; //WHERE type = 1";
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){

@@ -33,6 +33,7 @@ CREATE TABLE rules (
 	file_name VARCHAR(200),
 	path VARCHAR(200),
 	rule VARCHAR(300),
+	regex VARCHAR(300),
 	count INT,
 	type INT
 	);
