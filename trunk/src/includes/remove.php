@@ -1,7 +1,8 @@
 <?php
 	include("common.php");
 	$type = $_GET["type"];
-	$id = $_GET["id"];
+	$id = urldecode($_GET["id"]);
+	
 	
 	if($type == "file"){
 		include("dbconnect.php");
@@ -51,6 +52,20 @@
 		//returns to inputFile.php
 		header("location: ../inputFile.php");
 		//die();
+	}
+	
+	if($type == "folder"){
+		
+		include("dbconnect.php");
+		$id = mysql_real_escape_string($id);
+		
+		
+		//TODO: query database for files with type = 2 and path = $id
+		// and remove file --> $query = "DELETE FROM rules WHERE type=2 AND path = $id";
+		
+		
+		include("dbclose.php");
+		header("location: ../folderPath.php");
 	}
 	
 ?>
