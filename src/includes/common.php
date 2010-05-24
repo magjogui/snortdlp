@@ -1,6 +1,7 @@
 <?php
 	// Commonly used functions, including the regex and rule generating functions	
-
+	include ("histogram.php");
+	
 	function createSnortRule($sid, $alertName, $inputText){
 		/*
 		 * Given a sid, name and input text, return a Snort rule
@@ -104,7 +105,7 @@
 			return $sidBase;
 		}
 		else{
-			$lines = count(file($snortFile)) or die("can't open $snortFile");
+			$lines = count(file($snortFile)) or die("getNextsid(): can't open $snortFile");
 			return $sidBase + $lines - 5;
 		}
 	}
@@ -131,7 +132,7 @@
 		/*
 		 * Write $string out to $file.
 		 */
-		$fh = fopen($file, 'a') or die("can't open $file");
+		$fh = fopen($file, 'a') or die("writeToFile(): can't open $file");
 		fwrite($fh, $string . "\n");
 		fclose($fh);
 	}
@@ -218,8 +219,7 @@
 		 * Possibly rewrite this to pass a string that we build a 
 		 * regular expression from, and place in common.php?
 		 */
-		
-		$file = fopen($path, 'r') or die("can't open $path");
+		$file = fopen($path, 'r') or die("inFile(): can't open $path");
 		$text = fread($file, filesize($path));
 		fclose($file);
 		$standardText = standardizeText($text);
@@ -261,11 +261,11 @@
 		
 		include("dbconnect.php");
 		//gets the rule used for this file
-		$query = "SELECT file_name FROM rules";
+		$query = "SELECT file_name, path FROM rules";
 		$result = mysql_query($query);
 		
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-			array_push($locations, $row['file_name']);
+			array_push($locations, $row['path'] . '/' . $row['file_name']);
 		}
 		
 		//closes db connection
@@ -286,7 +286,7 @@
 					$path = "$startingDirectory/$thisEntry";
 					
 					//process the file we found
-					processFile($path, $scoringMethod, $substringLength, $snortFile);
+					processFile(2, $path, $scoringMethod, $substringLength, $snortFile);
 					
 					// If we are processing subdirectories and the entry is a directory, recursively call our function on it
 					if( ($includeSubfolders) && ($thisEntry != 0) && is_dir($startingDirectory/$thisEntry)){
@@ -299,28 +299,30 @@
 		}
 	}
 	
-	function processFile($path, $scoringMethod, $substringLength, $snortFile){
+	function processFile($type, $path, $scoringMethod, $substringLength, $snortFile){
 		
 		/*
 		 * Process an individual filepath.
+		 * 
+		 * Type = 1 for individual processed files, 2 for files processed from a folder crawl.
 		 */
-		$file = fopen($path, 'r') or die("can't open $path");
+		$file = fopen($path, 'r') or die("processFile(): can't open $path");
 		$substring = "";
 		$inputText = fread($file, filesize($path));
 		fclose($file);
-		/*
+		
 		switch($scoringMethod){
 			case "histogram":
 				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
 				break;
 			case "modifiedhist":
-				$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
+				//$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
 				break;
 			case "multipleRandSamples":
 				$substring = "";
 				break;
 			case "random":
-				$substring = selectSubstringRandom($inputText, $substringLength);
+				//$substring = selectSubstringRandom($inputText, $substringLength);
 				break;
 			default:
 				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
@@ -334,14 +336,20 @@
 		
 		//writes file to the database
 		include("dbconnect.php");
-		$completeFile = mysql_real_escape_string($completeFile);
+		
+		$parts = explode("/", $path); //get our path element parts
+		$fileName = array_pop($parts);
+		$path = implode("/", $parts); //rebuild our path
+		
 		$path = mysql_real_escape_string($path);
 		$fileName = mysql_real_escape_string($fileName);
 		$rule = mysql_real_escape_string($rule);
-		$query = "INSERT INTO rules (file_name, rule, type, count) VALUES ('$completeFile', '$rule', 1, 1)";
+		$regex = mysql_real_escape_string(createRegex($substring));
+		
+		$query = "INSERT INTO rules (file_name, path, rule, regex, count, type) VALUES ('$fileName', '$path', '$rule', '$regex', 1, $type)";
 		mysql_query($query);
-		include("dbclose.php"); 
-		*/
+		include("dbclose.php");
+
 		return;
 	}
 

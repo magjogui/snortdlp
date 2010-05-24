@@ -2,9 +2,6 @@
 	
 	//PROPOSE: delete, rolled into sampling.php
 
-
-	include("common.php"); //utility class
-	
 	function selectSubstringHistogram($histogram, $inputText, $substringLength){
 		
 		/*
@@ -64,7 +61,5 @@
 		
 		return $score;
 	}
-	
-	//inRepository
 	
 ?>

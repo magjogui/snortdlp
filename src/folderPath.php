@@ -61,7 +61,6 @@ Released   : 20100309
 	
 	if ($processFolder){
 		include("includes/dbconnect.php");
-		echo "processing a folder...<br>";
 		//gets the snort rules file
 		$query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
 		$result = mysql_query($query);
@@ -78,7 +77,7 @@ Released   : 20100309
 		$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
 		$substringLength = $row['substr_length']; //sets the substringLength to length from db
 		include("includes/dbclose.php");
-		
+
 		processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 	}
 	
@@ -105,24 +104,25 @@ Released   : 20100309
 					<h2 class="title">Manage Protected Folders</a></h2>
 					<br>
 					<table>
-					<tr><td><b>File</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
+					<tr><td><b>Folder</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
-						$query = "SELECT rule_id, file_name FROM rules WHERE type = 1";
+						$query = "SELECT rule_id, file_name, path FROM rules WHERE type = 2";
 						$result = mysql_query($query);
 						$paths = array();
 						//grab all of our paths from the database
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-							$parts = explode("/", $row['file_name']); //get our path element parts
-							array_pop($parts); //remove the filename from the end
-							$path = implode("/", $parts) . "/";
+							//$parts = explode("/", $row['file_name']); //get our path element parts
+							//array_pop($parts); //remove the filename from the end
+							//$path = implode("/", $parts) . "/";
+							$path = $row['path'];
 							array_push($paths, $path);
 						}
 						$paths = array_unique($paths); //uniquify the $paths array
 						
 						foreach($paths as $path){
-							echo "<tr><td width=\"250\">$path</td><td><a href=\"includes/remove.php?type=folder&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+							echo "<tr><td width=\"250\">$path</td><td><a href=\"includes/remove.php?type=folder&id=" . urlencode($path) . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 						}
 						include("includes/dbclose.php");
 						
