@@ -1,6 +1,7 @@
 <?php
 	// Commonly used functions, including the regex and rule generating functions	
-	include ("histogram.php");
+	//include ("histogram.php");
+	include ("sampling.php");
 	
 	function createSnortRule($sid, $alertName, $inputText){
 		/*
@@ -14,6 +15,39 @@
 		$rule = "alert tcp \$HOME_NET any -> \$EXTERNAL_NET any (msg:\"Possible detection of: $alertName\"; pcre:\"$regex\"; classtype:data-loss; sid:$sid;)";
 		
 		return $rule;
+	}
+	
+	function getConfig(){
+		/*
+		 * Return an array containing location of the Snort file and the 
+		 * substring length from the stored configuration in the database.
+		 */
+		
+		$configVariables = Array();
+		
+		include("includes/dbconnect.php");
+		//gets the snort rules file
+		$query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
+		$result = mysql_query($query);
+		$num_rows = mysql_num_rows($result);
+		
+		//checks if the user has configured the snort rule path
+		if($num_rows!=1){
+			header("location: config?new=1");
+			die();
+		}
+		
+		//sets variables to db values
+		$row = mysql_fetch_array($result);
+		$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
+		$substringLength = $row['substr_length']; //sets the substringLength to length from db
+		
+		$configVariables['snortFile'] = $snortFile;
+		$configVariables['substringLength'] = $substringLength;
+		
+		include("includes/dbclose.php");
+		
+		return $configVariables;
 	}
 	
 	function createRegex($inputText){

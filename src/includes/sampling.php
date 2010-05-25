@@ -1,5 +1,5 @@
 <?php
-	include("common.php"); //utility class
+	//include("common.php"); //utility class
 	
 	function selectSubstringHistogram($histogram, $inputText, $substringLength){
 		
