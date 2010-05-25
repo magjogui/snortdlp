@@ -79,28 +79,6 @@
 		return $inputText;
 	}
 	
-	function queryDatabase($query){
-
-		/*
-		 * Connect to our specific database and pass along $query
-		 * 
-		 * ... used? should we remove? TODO
-		 */
-		
-		// Connect to db
-		include("dbconnect.php");
-		
-		$query = mysql_real_escape_string($query); //sanitize the string before passing to MySQL
-		
-		//perform the query and cleanup
-		$result = mysql_query($query);
-		
-		// Close db connection
-		include("dbclose.php");
-		
-		return $result;
-	}
-	
 	function insertHistogramIntoDatabase($histogram){
 		//TODO: make this cleaner, find a better way to do this
 
@@ -140,7 +118,7 @@
 		}
 		else{
 			$lines = count(file($snortFile)) or die("getNextsid(): can't open $snortFile");
-			return $sidBase + $lines - 5;
+			return $sidBase + $lines - 2;
 		}
 	}
 	

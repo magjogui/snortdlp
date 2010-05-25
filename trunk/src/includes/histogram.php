@@ -1,12 +1,12 @@
 <?php
 	
 	//PROPOSE: delete, rolled into sampling.php
-
+	/*
 	function selectSubstringHistogram($histogram, $inputText, $substringLength){
 		
 		/*
 		 * Return the lowest scored substring from $inputText
-		 */
+		 
 		
 		$alpha = 1; //local repository weight
 		$beta = .5; //global repository weight
@@ -40,7 +40,7 @@
 		/*
 		 * Generate the histogram of the inputText.
 		 * Returns: histogram of inputText
-		 */
+		 
 		
 		$words = explode(" ", $inputText); //split our standardized input by spaces
 		return array_count_values($words); //return an arrray of occurances
@@ -49,7 +49,7 @@
 	function localScore($histogram, $substring){
 		/*
 		 * Return a score of a specific substring using the local histogram.
-		 */
+		 
 		
 		//need standardizeText() here?
 		$words = explode(" ", standardizeText($substring));
@@ -61,5 +61,5 @@
 		
 		return $score;
 	}
-	
+	*/
 ?>
