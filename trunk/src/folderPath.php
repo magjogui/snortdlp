@@ -122,7 +122,7 @@ Released   : 20100309
 						$paths = array_unique($paths); //uniquify the $paths array
 						
 						foreach($paths as $path){
-							echo "<tr><td width=\"250\">$path</td><td><a href=\"includes/remove.php?type=folder&id=" . urlencode($path) . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+							echo "<tr><td width=\"250\">$path</td><td><a href=\"display.php?type=folder&id=" . urlencode($path) . "\">display</a> |</td><td><a href=\"includes/remove.php?type=folder&id=" . urlencode($path) . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 						}
 						include("includes/dbclose.php");
 						
