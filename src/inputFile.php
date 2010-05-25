@@ -47,16 +47,15 @@ function replaceAlertName() {
 				<div class="entry">
 					<form action="displayResults.php" method="post">
 						<table>
-						<tr><td><b>Location: <b><input type="text" id="location" name="location" onChange="replaceAlertName()" value="/home/"/></td>
-						<td><b>Name: </b><input type="text" id="fileName" name="fileName" value="test.txt"/></td></tr>
-						<tr><td><b>Method: </b>
+						<tr><td><b>File: </b><input type="file" id="fileName" name="fileName" value="test.txt"/></td>
+						<td><b>Method: </b>
 							<SELECT NAME="scoringMethod">
 								<OPTION VALUE=histogram SELECTED>Histogram
 								<OPTION VALUE=modifiedhist>Modified histogram
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
 								<OPTION VALUE=random>Random
-							</SELECT></td>
-							<td align="right"><input type="submit" id="create" value="Create" /></td></tr>
+							</SELECT></td></tr>
+							<tr><td><input type="submit" id="create" value="Create" /></td></tr>
 						</table>						
 					</form>
 					<br><br><br>
@@ -67,11 +66,11 @@ function replaceAlertName() {
 					<?php 
 						include("includes/dbconnect.php");
 						
-						$query = "SELECT rule_id, file_name FROM rules WHERE type = 1";
+						$query = "SELECT rule_id, file_name, path FROM rules WHERE type = 1";
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-							echo "<tr><td width=\"250\">" . $row['file_name'] . "</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+							echo "<tr><td width=\"250\">" . $row['path'] . "</td><td>" . $row['file_name'] . "</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 					
 						}					
 						include("includes/dbclose.php"); 

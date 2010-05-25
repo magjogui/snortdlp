@@ -51,11 +51,18 @@ Released   : 20100309
 	}
 	
 	if (isset($_POST['fileName']) && !empty($_POST['fileName'])){
-		$fileName = $_POST['fileName'];
+		$completeFile = $_POST['fileName'];
+		
+		//gets the filename and the path
+		$fileName = substr(strrpos("/", $completeFile) + 1, strlen($completeFile) - 1);
+		$path = substr(0, strrpos("/", $completeFile));
+		
+		$file = fopen($completeFile, 'r') or die("can't open $completeFile");
+		$inputText = fread($file, filesize($completeFile));
+		fclose($file);
 	}
 	
 	if (isset($_POST['location']) && !empty($_POST['location'])){
-		$path = $_POST['location'];
 		
 		// Checks to make sure the inputted path is valid and exists
 		if($path{strlen($path)-1} != "/"){
@@ -123,7 +130,8 @@ Released   : 20100309
 				<h2 class="title">Regular Expression</a></h2>
 				<div class="entry">
 					<?php
-						echo createRegex($substring) . "<br><br>";
+						$regex = createRegex($substring);
+						echo $regex . "<br><br>";
 					?>		
 			</div>
 		  </div>
@@ -141,11 +149,10 @@ Released   : 20100309
 						}
 						//writes file to the database
 						include("includes/dbconnect.php");
-						$completeFile = mysql_real_escape_string($completeFile);
 						$path = mysql_real_escape_string($path);
 						$fileName = mysql_real_escape_string($fileName);
 						$rule = mysql_real_escape_string($rule);
-						$query = "INSERT INTO rules (file_name, rule, type, count) VALUES ('$completeFile', '$rule', 1, 1)";
+						$query = "INSERT INTO rules (file_name, path, rule, regex, type, count) VALUES ('$fileName', '$path', '$rule', '$regex', 1, 1)";
 						mysql_query($query);
 						include("includes/dbclose.php"); 
 						
