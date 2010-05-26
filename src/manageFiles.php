@@ -47,7 +47,7 @@ Released   : 20100309
 					}
 					?>
 					<table>
-					<tr><td><b>File</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
+					<tr><td><b>File</b></td><td colspan="3" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
@@ -57,14 +57,14 @@ Released   : 20100309
 							$fileSearchTerm = "";
 						}
 						
-						$query = "SELECT rule_id, file_name FROM rules WHERE file_name LIKE '%$fileSearchTerm%' AND type=1";
+						$query = "SELECT rule_id, file_name, path FROM rules WHERE file_name LIKE '%$fileSearchTerm%' AND type=1";
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-							echo "<tr><td width=\"250\">" . $row['file_name'] . "</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
-					
-						}					
-						include("includes/dbclose.php"); 
+							echo "<tr><td width=\"250\">" . $row['path'] ."/". $row['file_name'] . "</td><td><a href=\"display.php?type=file&id=" . $row['rule_id'] . "\">display</a> |</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+						}
+									
+						include("includes/dbclose.php");
 					?>
 					</table>
 			</div>
@@ -88,7 +88,7 @@ Released   : 20100309
 					}
 					?>
 					<table>
-					<tr><td><b>Folder</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
+					<tr><td><b>Folder</b></td><td colspan="3" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
@@ -109,7 +109,7 @@ Released   : 20100309
 						$paths = array_unique($paths); //uniquify the $paths array
 						
 						foreach($paths as $path){
-							echo "<tr><td width=\"250\">$path</td><td><a href=\"includes/remove.php?type=folder&id=" . urlencode($path) . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+							echo "<tr><td width=\"250\">$path</td><td><a href=\"display.php?type=folder&id=" . urlencode($path) . "\">display</a> |</td><td><a href=\"includes/remove.php?type=folder&id=" . urlencode($path) . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 						}
 						include("includes/dbclose.php");
 						

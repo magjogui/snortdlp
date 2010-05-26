@@ -58,9 +58,7 @@ Released   : 20100309
 		
 		$completeFile = $path. $fileName;
 		
-		//processFile($type, $path, $scoringMethod, $substringLength, $snortFile){
 		processFile(1, $completeFile, $scoringMethod, $substringLength, $snortFile);
-
 	}
 	
 	?>
@@ -86,7 +84,8 @@ Released   : 20100309
 					<h2 class="title">Manage Protected Files</a></h2>
 					<br>
 					<table>
-					<tr><td><b>Directory</b><td><b>File</b></td></td><td colspan="3" align="center"><b>Action</b></td></tr>
+					<!-- <tr><td><b>Directory</b><td><b>File</b></td></td><td colspan="3" align="center"><b>Action</b></td></tr>--!>
+					<tr><td><b>File</b></td><td colspan="3" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
@@ -94,8 +93,7 @@ Released   : 20100309
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-							echo "<tr><td>" . $row['path'] . "</td><td width=\"250\">" . $row['file_name'] . "</td><td><a href=\"display.php?type=file&id=" . $row['rule_id'] . "\">display</a> |</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
-					
+							echo "<tr><td width=\"250\">" . $row['path'] ."/". $row['file_name'] . "</td><td><a href=\"display.php?type=file&id=" . $row['rule_id'] . "\">display</a> |</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
 						}					
 						include("includes/dbclose.php"); 
 						
