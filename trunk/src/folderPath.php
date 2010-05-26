@@ -77,7 +77,6 @@ Released   : 20100309
 		$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
 		$substringLength = $row['substr_length']; //sets the substringLength to length from db
 		include("includes/dbclose.php");
-
 		processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 	}
 	
@@ -97,6 +96,8 @@ Released   : 20100309
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
 								<OPTION VALUE=random>Random
 							</SELECT></td>
+						<tr><td><b>Include subfolders: </b>
+							<input type="checkbox" name="includeSubfolders" id="includeSubfolders" value="true"></input></td>
 							<td align="right"><input type="submit" id="create" value="Process" /></td></tr>
 						</table>						
 					</form>

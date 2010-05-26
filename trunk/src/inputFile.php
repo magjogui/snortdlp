@@ -37,6 +37,16 @@ Released   : 20100309
 		
 		$fileName = $_POST['fileName'];
 		$path = $_POST['path'];
+		$config = getConfig();
+		$snortFile = $config['snortFile'];
+		$substringLength = $config['substringLength'];
+		
+		/*
+		 * gets scoring method
+		 */
+		if (isset($_POST['scoringMethod']) && !empty($_POST['scoringMethod'])){
+			$scoringMethod = $_POST['scoringMethod'];
+		}
 		
 	    // Checks to make sure the inputted path is valid and exists
 		if($path{strlen($path)-1} != "/"){
@@ -48,53 +58,9 @@ Released   : 20100309
 		
 		$completeFile = $path. $fileName;
 		
-		$file = fopen($completeFile, 'r') or die("can't open $completeFile and $");
-		$inputText = fread($file, filesize($completeFile));
-		fclose($file);
-	
-		$config = getConfig();
-		
-		$snortFile = $config['snortFile'];
-		$substringLength = $config['substringLength'];
-		
-		/*
-		 * gets scoring method
-		 */
-		if (isset($_POST['scoringMethod']) && !empty($_POST['scoringMethod'])){
-			$scoringMethod = $_POST['scoringMethod'];
-		}
-		
-		switch($scoringMethod){
-			case "histogram":
-				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
-				break;
-			case "modifiedhist":
-				$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
-				break;
-			case "multipleRandSamples":
-				$substring = "";
-				break;
-			case "random":
-				$substring = selectSubstringRandom($inputText, $substringLength);
-				break;
-			default:
-				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
-		}
-		
-		$regex = createRegex($substring);
-		
-		$rule = createSnortRule(getNextsid($snortFile), $fileName, $substring);
-		
-		writeToFile($snortFile, $rule);
-		
-		include("includes/dbconnect.php");
-		$path = mysql_real_escape_string($path);
-		$fileName = mysql_real_escape_string($fileName);
-		$rule = mysql_real_escape_string($rule);
-		$regex = mysql_real_escape_string($regex);
-		$query = "INSERT INTO rules (file_name, path, rule, regex, type, count) VALUES ('$fileName', '$path', '$rule', '$regex', 1, 1)";
-		mysql_query($query);
-		include("includes/dbclose.php"); 
+		//processFile($type, $path, $scoringMethod, $substringLength, $snortFile){
+		processFile(1, $completeFile, $scoringMethod, $substringLength, $snortFile);
+
 	}
 	
 	?>
