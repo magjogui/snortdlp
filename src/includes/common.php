@@ -295,14 +295,16 @@
 		if($dObj = dir($startingDirectory)) {
 			while($thisEntry = $dObj->read()) { 
 				if ($thisEntry != "." && $thisEntry != "..") {
-					$path = "$startingDirectory/$thisEntry";
+					$path = "$startingDirectory$thisEntry";
 					
 					//process the file we found
-					processFile(2, $path, $scoringMethod, $substringLength, $snortFile);
+					if (!is_dir($path)){
+						processFile(2, $path, $scoringMethod, $substringLength, $snortFile); //if the found file is not a directory, process it
+					}
 					
 					// If we are processing subdirectories and the entry is a directory, recursively call our function on it
-					if( ($includeSubfolders) && ($thisEntry != 0) && is_dir($startingDirectory/$thisEntry)){
-						processFolder("$startingDirectory/$thisEntry", $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+					if( ($includeSubfolders) && is_dir($path)){
+						processFolder($path."/", $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 					} 
 				} else { 
 						//ignore "." and ".." to prevent an infinite loop
@@ -318,51 +320,80 @@
 		 * 
 		 * Type = 1 for individual processed files, 2 for files processed from a folder crawl.
 		 */
-		$file = fopen($path, 'r') or die("processFile(): can't open $path");
-		$substring = "";
-		$inputText = fread($file, filesize($path));
-		fclose($file);
 		
-		switch($scoringMethod){
-			case "histogram":
-				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
-				break;
-			case "modifiedhist":
-				//$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
-				break;
-			case "multipleRandSamples":
-				$substring = "";
-				break;
-			case "random":
-				//$substring = selectSubstringRandom($inputText, $substringLength);
-				break;
-			default:
-				$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+		if(!fileAlreadyProcessed($path)){ 
+			
+			$file = fopen($path, 'r') or die("processFile(): can't open $path");
+			$substring = "";
+			$inputText = fread($file, filesize($path));
+			fclose($file);
+			
+			switch($scoringMethod){
+				case "histogram":
+					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+					break;
+				case "modifiedhist":
+					//$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
+					break;
+				case "multipleRandSamples":
+					$substring = "";
+					break;
+				case "random":
+					//$substring = selectSubstringRandom($inputText, $substringLength);
+					break;
+				default:
+					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+			}
+			$rule = createSnortRule(getNextsid($snortFile), $path, $substring);
+			
+			if ($snortFile != ""){
+				//if snortFile was passed, write the rule out to the snort file
+				writeToFile($snortFile, $rule);
+			}
+			
+			//writes file to the database
+			include("dbconnect.php");
+			
+			$parts = explode("/", $path); //get our path element parts
+			$fileName = array_pop($parts);
+			$path = implode("/", $parts); //rebuild our path
+			
+			$path = mysql_real_escape_string($path);
+			$fileName = mysql_real_escape_string($fileName);
+			$rule = mysql_real_escape_string($rule);
+			$regex = mysql_real_escape_string(createRegex($substring));
+			
+			$query = "INSERT INTO rules (file_name, path, rule, regex, count, type) VALUES ('$fileName', '$path', '$rule', '$regex', 1, $type)";
+			mysql_query($query);
+			include("dbclose.php");
 		}
-		$rule = createSnortRule(getNextsid($snortFile), $path, $substring);
 		
-		if ($snortFile != ""){
-			//if snortFile was passed, write the rule out to the snort file
-			writeToFile($snortFile, $rule);
-		}
+		return;
+	}
+	
+	function fileAlreadyProcessed($path){
+		/*
+		 * Query the database and see if this specific file has already been processed.
+		 */
 		
-		//writes file to the database
 		include("dbconnect.php");
 		
 		$parts = explode("/", $path); //get our path element parts
 		$fileName = array_pop($parts);
 		$path = implode("/", $parts); //rebuild our path
 		
-		$path = mysql_real_escape_string($path);
-		$fileName = mysql_real_escape_string($fileName);
-		$rule = mysql_real_escape_string($rule);
-		$regex = mysql_real_escape_string(createRegex($substring));
+		$query = "SELECT path, file_name FROM rules WHERE path = '$path' AND file_name = '$fileName'";
+		$result = mysql_query($query);
+		$num_rows = mysql_num_rows($result);
 		
-		$query = "INSERT INTO rules (file_name, path, rule, regex, count, type) VALUES ('$fileName', '$path', '$rule', '$regex', 1, $type)";
-		mysql_query($query);
 		include("dbclose.php");
-
-		return;
+		
+		if ($num_rows > 0){
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 ?>
