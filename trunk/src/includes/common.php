@@ -108,18 +108,26 @@
 		include("includes/dbclose.php"); 
 	}
 	
-	function getNextsid($snortFile){
+	function getNextsid(){
 		/*
 		 * Count the lines in the snort file and return the next logical sid for snort rules
 		 */
 		$sidBase = 1000000;
-		if($snortFile == ""){ //if the snort file wasn't set, return the base SID
+		
+		include("includes/dbconnect.php");
+		//gets the snort rules file
+		$query = "SELECT sid FROM rules ORDER BY sid DESC LIMIT 1";
+		$result = mysql_query($query);
+		
+		if(mysql_num_rows($result) == 0){
 			return $sidBase;
 		}
-		else{
-			$lines = count(file($snortFile)) or die("getNextsid(): can't open $snortFile");
-			return $sidBase + $lines - 2;
-		}
+		
+		$row = mysql_fetch_array($result);
+		$sid = $row['sid'] + 1;
+		include("includes/dbclose.php"); 
+		
+		return $sid;
 	}
 	
 	function standardizeText($inputText){
@@ -133,7 +141,7 @@
 		
 		//convert the string to lowercase and split on whitespace
 		$split = preg_split('/\s+/', strtolower($inputText)); 
-		
+		//$split = preg_split('/[\s|\n|\r]+/', strtolower($inputText));
 		//reassemble the string, separated by a single space
 		$cleanText = trim(implode(" ", $split));
 		
@@ -336,7 +344,6 @@
 					//$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
 					break;
 				case "multipleRandSamples":
-					$substring = "";
 					break;
 				case "random":
 					//$substring = selectSubstringRandom($inputText, $substringLength);
@@ -344,7 +351,13 @@
 				default:
 					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
 			}
-			$rule = createSnortRule(getNextsid($snortFile), $path, $substring);
+			
+			if($substring == ""){
+				return; //if no unique substring is found, skip this file
+			}
+			
+			$sid = getNextsid();
+			$rule = createSnortRule($sid, $path, $substring);
 			
 			if ($snortFile != ""){
 				//if snortFile was passed, write the rule out to the snort file
@@ -363,7 +376,7 @@
 			$rule = mysql_real_escape_string($rule);
 			$regex = mysql_real_escape_string(createRegex($substring));
 			
-			$query = "INSERT INTO rules (file_name, path, rule, regex, count, type) VALUES ('$fileName', '$path', '$rule', '$regex', 1, $type)";
+			$query = "INSERT INTO rules (file_name, path, rule, regex, count, sid, type) VALUES ('$fileName', '$path', '$rule', '$regex', 1, $sid, $type)";
 			mysql_query($query);
 			include("dbclose.php");
 		}

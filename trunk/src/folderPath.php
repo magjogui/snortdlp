@@ -105,7 +105,7 @@ Released   : 20100309
 					<h2 class="title">Manage Protected Folders</a></h2>
 					<br>
 					<table>
-					<tr><td><b>Folder</b></td><td colspan="2" align="center"><b>Action</b></td></tr>
+					<tr><td><b>Folder</b></td><td colspan="3" align="center"><b>Action</b></td></tr>
 					<?php 
 						include("includes/dbconnect.php");
 						
