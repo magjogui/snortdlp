@@ -35,5 +35,6 @@ CREATE TABLE rules (
 	rule VARCHAR(300),
 	regex VARCHAR(300),
 	count INT,
+	sid INT,
 	type INT
 	);
