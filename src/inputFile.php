@@ -33,9 +33,8 @@ Released   : 20100309
 	/**
 	 * checks if the fileName was past from the post method
 	 */
-	if (isset($_POST['fileName']) && !empty($_POST['fileName']) && isset($_POST['path']) && !empty($_POST['path'])){
+	if (isset($_POST['path']) && !empty($_POST['path'])){
 		
-		$fileName = $_POST['fileName'];
 		$path = $_POST['path'];
 		$config = getConfig();
 		$snortFile = $config['snortFile'];
@@ -48,17 +47,7 @@ Released   : 20100309
 			$scoringMethod = $_POST['scoringMethod'];
 		}
 		
-	    // Checks to make sure the inputted path is valid and exists
-		if($path{strlen($path)-1} != "/"){
-			$path = $path . "/";
-			if(realpath($path) == false){
-				$path_error = true;
-			}
-		}
-		
-		$completeFile = $path. $fileName;
-		
-		processFile(1, $completeFile, $scoringMethod, $substringLength, $snortFile);
+		processFile(1, $path, $scoringMethod, $substringLength, $snortFile);
 	}
 	
 	?>
@@ -69,15 +58,15 @@ Released   : 20100309
 				<div class="entry">
 					<form action="inputFile.php" method="post">
 						<table>
-						<tr><td><b>Directory: </b><input type="text" id="path" name="path"/></td><td><b>File: </b><input type="text" id="fileName" name="fileName"/></td></tr>
-						<tr><td><b>Method: </b>
+						<tr><td><b>Complete file path: </b><input type="text" id="path" name="path"/></td>
+						<td><b>Method: </b>
 							<SELECT NAME="scoringMethod">
 								<OPTION VALUE=histogram SELECTED>Histogram
 								<OPTION VALUE=modifiedhist>Modified histogram
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
 								<OPTION VALUE=random>Random
-							</SELECT></td>
-							<td align="right"><input type="submit" id="create" value="Create" /></td></tr>
+							</SELECT></td></tr>
+							<tr></tr><td align="left"><input type="submit" id="create" value="Create" /></td></tr>
 						</table>						
 					</form>
 					<br><br><br>

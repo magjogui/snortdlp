@@ -95,8 +95,11 @@ Released   : 20100309
 							</SELECT>
 						<br><br>
 						<input type="hidden" name="process" value="true">
-						<input type="submit" id="submit" value="Process" />
+						<input type="submit" id="submit" value="Create" />
 					</form>
+					<br><br><br>
+					<h2 class="title">Manage Protected Text</a></h2>
+					<br>
 					<table>
 					<tr><td><b>Alert</b></td><td colspan="3" align="center"><b>Action</b></td></tr>
 					<?php 
