@@ -8,53 +8,18 @@
 		include("dbconnect.php");
 		$id = mysql_real_escape_string($id);
 		
-		//gets the rule used for this file
-		$query = "SELECT rule FROM rules WHERE rule_id = $id";
-		$result = mysql_query($query);
-		$row = mysql_fetch_array($result);
-		$rule = $row['rule'];
-		
-		//gets the path for the SnortDLP.rules file
-		$query = "SELECT snort_rules_path FROM config WHERE config_id = 1";
-		$result = mysql_query($query);
-		$row = mysql_fetch_array($result);
-		$snort_path = $row['snort_rules_path'];
-		
 		//deletes the record for this file
 		$query = "DELETE FROM rules WHERE rule_id = $id";
 		mysql_query($query);
-		
-		
-		//gets the rule used for this file
-		$query = "SELECT rule FROM rules";
-		$result = mysql_query($query);
-		$file_handle = fopen($snort_path, 'w+');
-		
-		//writes header
-		fwrite($file_handle, "********************************************\n");
-		fwrite($file_handle, "*              SnortDLP Rules              *\n");
-		fwrite($file_handle, "********************************************\n");
-		
-		//re-writes all rules from the db
-		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-			fwrite($file_handle, $row['rule']);
-		}
-		
-		//closes db connection
 		include("dbclose.php");
-		//closes the file
-		fclose($file_handle);
 		
-		//include("dbclose.php");
-		
-		//rewriteRulesFile();
+		//rewrites the rules file with all the rules currently in the db
+		rewriteRulesFile();
 		
 		//returns to inputFile.php
 		header("location: ../inputFile.php");
 		//die();
-	}
-	
-	if($type == "folder"){
+	} else if($type == "folder"){
 		
 		include("dbconnect.php");
 		$id = mysql_real_escape_string($id);
@@ -66,6 +31,20 @@
 		
 		include("dbclose.php");
 		header("location: ../folderPath.php");
+	} else if($type == "free"){
+		
+		include("dbconnect.php");
+		$id = mysql_real_escape_string($id);
+		
+		//deletes the record for this file
+		$query = "DELETE FROM rules WHERE rule_id = $id";
+		mysql_query($query);
+		include("dbclose.php");
+		
+		//rewrites the rules file with all the rules currently in the db
+		rewriteRulesFile();
+		
+		header("location: ../freeText.php");
 	}
 	
 ?>
