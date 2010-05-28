@@ -59,7 +59,8 @@
 		array_map("sanitizeRegex",$words); //sanitize each word
 		
 		//glue words together and build the regex
-		$regex = "/(" . implode(")( )*(", $words) . ")/is";
+		$regex = "/(" . implode(")([\s]*?)(", $words) . ")/i";
+		$regex = sanitizeRegex($regex);
 	
 		return $regex;
 	}
@@ -69,7 +70,7 @@
 		 * Escape any reserved regex characters in $inputText.
 		 */
 		
-		$reserved = array("\\","[","^","$",".","|","?","*","+","(",")","{","}");
+		$reserved = array("\\","[","^","$",".","|","?","*","+","(",")","{","}","#");
 		
         for($i = 0; $i < count($reserved); $i++){
         	$char = $reserved[$i];
@@ -195,9 +196,9 @@
 	}
 	
 	function closeShare(){
+		//TODO: check why this isn't executing correctly
 		exec("sudo umount -l /mnt/share");
 		exec("sudo rmdir /mnt/share");
-		
 		return;
 	}
 	
