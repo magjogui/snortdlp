@@ -56,12 +56,11 @@
 		 */
 		
 		$words = explode(" ", standardizeText($inputText));
-		array_map("sanitizeRegex",$words); //sanitize each word
-		
+		$words = array_map("sanitizeRegex",$words); //sanitize each word
+
 		//glue words together and build the regex
 		$regex = "/(" . implode(")([\s]*?)(", $words) . ")/i";
-		$regex = sanitizeRegex($regex);
-	
+		
 		return $regex;
 	}
 	
@@ -69,7 +68,6 @@
 		/*
 		 * Escape any reserved regex characters in $inputText.
 		 */
-		
 		$reserved = array("\\","[","^","$",".","|","?","*","+","(",")","{","}","#");
 		
         for($i = 0; $i < count($reserved); $i++){
