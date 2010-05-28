@@ -40,8 +40,9 @@ Released   : 20100309
 				<h2 class="title">Details</a></h2>
 				<div class="entry">
 					<?php 
-					if ($id > 0){
+					
 						if ($type == "file") {
+							if ($id > 0){
 								$id = (int)$id;
 								include("includes/dbconnect.php");
 								$query = "SELECT rule, regex, path, file_name FROM rules WHERE rule_id = $id";
@@ -63,6 +64,7 @@ Released   : 20100309
 									echo "</table>";
 								}						
 								include("includes/dbclose.php");
+							}
 						} else if ($type == "folder") {
 							include("includes/dbconnect.php");
 							$id = mysql_real_escape_string($id);
@@ -80,7 +82,7 @@ Released   : 20100309
 							}
 							include("includes/dbclose.php");
 						} else if ($type == "free"){
-
+							if ($id > 0){
 								include("includes/dbconnect.php");
 								$query = "SELECT rule, regex FROM rules WHERE rule_id = $id";
 								$result = mysql_query($query);
