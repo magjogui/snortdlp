@@ -68,7 +68,7 @@
 		/*
 		 * Escape any reserved regex characters in $inputText.
 		 */
-		$reserved = array("\\","[","^","$",".","|","?","*","+","(",")","{","}","#");
+		$reserved = array("\\", "/", "[","^","$",".","|","?","*","+","(",")","{","}");
 		
         for($i = 0; $i < count($reserved); $i++){
         	$char = $reserved[$i];
@@ -290,6 +290,19 @@
 		include("dbclose.php");
 		
 		return $score;
+	}
+	
+	function scoreHistogram($histogram){
+		//Takes a histogram and returns a word -> score mapping for the entire thing
+		$histogramScores = array();
+
+		foreach ($histogram as $key => $value){
+			$score = repositoryScore($key);
+			echo "$key = $score<br>";
+			$histogramScores[$key] = $score;
+		}
+		
+		return $histogramScores;
 	}
 	
 	function returnRepositoryLocations(){

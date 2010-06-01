@@ -11,11 +11,19 @@
 		$beta = .5; //global repository weight
 		$substringScores = array();
 		$split = explode(" ", standardizeText($inputText)); //split standardized string into words
-
+		
+		$histogramScores = scoreHistogram($histogram); //score the histogram once to increase speed
+		
 		//iterate through all possible substrings of the specified length
 		for($i=0; $i < count($split) - $substringLength +1; $i++){
 			$substring = implode(" ", array_slice($split,$i,$substringLength)); //grab a substring of the correct length
-			$repositoryScore = repositoryScore($substring);
+			
+			$repositoryScore = 0;
+			$words = explode(" ", $substring); //get our repository score
+			foreach($words as $word){
+				$repositoryScore += $histogramScores[$word];
+			}
+			
 			$score = $alpha * localScore($histogram, $substring) + $beta * $repositoryScore;
 			$substringScores[$i] = $score;
 		}
@@ -42,7 +50,6 @@
 		 * 
 		 * Every time we generate a histogram, insert it into the global histogram table
 		 */
-		
 		$words = explode(" ", $inputText); //split our standardized input by spaces
 		$histogram = array_count_values($words); //return an arrray of occurances
 		insertHistogramIntoDatabase($histogram);
