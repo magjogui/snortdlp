@@ -105,7 +105,31 @@ Released   : 20100309
 								}
 								include("includes/dbclose.php"); 
 						}
-					}
+					} else if ($type == "db") {
+							if ($id > 0){
+								$id = (int)$id;
+								include("includes/dbconnect.php");
+								$query = "SELECT rule, regex, path, file_name FROM rules WHERE rule_id = $id";
+								$result = mysql_query($query);
+								
+								if (mysql_num_rows($result) > 0){
+									$row = mysql_fetch_array($result);
+									
+									$rule = $row['rule'];
+									$regex = $row['regex'];
+									$path = $row['path'];
+									$fileName = $row['file_name'];
+									
+									echo "<table>";
+									echo "<tr><td><b>Table: </b></td><td>$fileName</td></tr>";
+									echo "<tr><td><b>Protected Column: </b></td><td>$path</td></tr>";
+									echo "<tr><td><b>Regular Expression: </b></td><td>$regex</td></tr>";
+									echo "<tr><td><b>Snort Rule: </b></td><td>$rule</td></tr>";
+									echo "</table>";
+								}						
+								include("includes/dbclose.php");
+							}
+						}
 					?>
 					
 			</div>
