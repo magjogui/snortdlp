@@ -79,31 +79,16 @@
 	}
 	
 	function insertHistogramIntoDatabase($histogram){
-		//TODO: make this cleaner, find a better way to do this
 
 		include("includes/dbconnect.php");
+		$sql = array();
 		
 		foreach($histogram as $word => $count){
-			$existing = false;
-			$word = mysql_real_escape_string($word); //should we do this??? TODO
-			
-			$query = "SELECT count FROM words WHERE word=\"$word\"";
-			$result = mysql_query($query);
-			
-			while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-				$count += $row['count'];
-				$existing = true;
-			}
-			
-			if($existing){ //messy ... better way to do this?
-				$query = "UPDATE words SET count=$count WHERE word='$word'";
-			}
-			else{
-				$query = "INSERT INTO words (word, count) VALUES ('$word', $count)";
-			}
-
-			mysql_query($query);
+			$sql[] = '("'.$word.'", '.$count.')';
 		}
+		
+		$query = "INSERT INTO words (word,count) VALUES " . implode(',', $sql) . " ON DUPLICATE KEY UPDATE count = count + VALUES (count)";
+		mysql_query($query);
 		include("includes/dbclose.php"); 
 	}
 	
@@ -298,7 +283,6 @@
 
 		foreach ($histogram as $key => $value){
 			$score = repositoryScore($key);
-			echo "$key = $score<br>";
 			$histogramScores[$key] = $score;
 		}
 		

@@ -12,6 +12,15 @@ echo "<br>";
 $substring = selectSubstringHistogram($histogram, $string, 7);
 echo "$substring<br>";
 
+$sql = array(); 
+foreach( $histogram as $word => $count ) {
+    $sql[] = '("'.$word.'", '.$count.')';
+}
+
+$query = 'INSERT INTO table (text, category) VALUES '.implode(',', $sql);
+echo $query;
+
+
 /*
 $histogramScores = scoreHistogram($histogram);
 print_r($histogramScores);
