@@ -37,7 +37,6 @@
 			die();
 		}
 		
-		//sets variables to db values
 		$row = mysql_fetch_array($result);
 		$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
 		$substringLength = $row['substr_length']; //sets the substringLength to length from db
@@ -87,6 +86,8 @@
 			$sql[] = '("'.$word.'", '.$count.')';
 		}
 		
+		//the following query will insert the new count if non exists
+		//or upon duplication it will add the new value to the existing count
 		$query = "INSERT INTO words (word,count) VALUES " . implode(',', $sql) . " ON DUPLICATE KEY UPDATE count = count + VALUES (count)";
 		mysql_query($query);
 		include("includes/dbclose.php"); 
@@ -248,48 +249,35 @@
 		
 		//if substring is found within the file, flag
 		if (strripos($standardText,$substring)){
-			#echo "Found \"$substring\" in \"$path\"\n";
 			return True;
 		}
 		
 		return False;
 	}
 	
-	function repositoryScore($substring){
+	function scoreHistogram($histogram){
+		//Takes a local score histogram and returns a histogram of the weighted total of the local and repository scores
 		
-		//TODO: Correct SQL statement, probably wrong
+		$alpha = 1; //local repository weight
+		$beta = .5; //global repository weight
 		
-		//need standardizeText() here?
 		include("dbconnect.php");
 		
-		$words = explode(" ", standardizeText($substring));
-		$score = 0;
-		
-		foreach ($words as $word){
-			$query = "SELECT word_id, word, count FROM words WHERE word=\"$word\"";
-			$result = mysql_query($query);
-			while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-				$score += $row['count'];
-			}
+		$query = "SELECT word, count FROM words WHERE word IN ('" . implode("','", array_keys($histogram)) ."')";
+		$result = mysql_query($query);
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			$word = strtolower($row['word']);
+			$histogram[$word] = $histogram[$word] * $alpha + $row['count'] * $beta;	//weight the local and global/repository scores
 		}
-		include("dbclose.php");
-		
-		return $score;
-	}
-	
-	function scoreHistogram($histogram){
-		//Takes a histogram and returns a word -> score mapping for the entire thing
-		$histogramScores = array();
 
-		foreach ($histogram as $key => $value){
-			$score = repositoryScore($key);
-			$histogramScores[$key] = $score;
-		}
-		
-		return $histogramScores;
+		include("dbclose.php");
+		return $histogram;
 	}
 	
 	function returnRepositoryLocations(){
+		/*
+		 * Query the database for all file locations.
+		 */
 		
 		$locations = array();
 		
@@ -301,10 +289,8 @@
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 			array_push($locations, $row['path'] . '/' . $row['file_name']);
 		}
-		
-		//closes db connection
+
 		include("dbclose.php");
-		
 		return $locations;
 	}
 	

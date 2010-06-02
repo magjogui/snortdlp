@@ -1,37 +1,28 @@
 <?php 
 include("includes/common.php");
 
-$string = "the this is a test the this is a test test the this is a test test test test";
+$string = "this is a test this is a second test test"; //1872
 
 $words = explode(" ", $string); //split our standardized input by spaces
 $histogram = array_count_values($words); //return an arrray of occurances
 
-//selectSubstringHistogram($histogram, $inputText, $substringLength)
 print_r($histogram);
 echo "<br>";
-$substring = selectSubstringHistogram($histogram, $string, 7);
-echo "$substring<br>";
+$histogram = scoreHistogram($histogram);
+print_r($histogram);
+echo "<br>";
 
-$sql = array(); 
-foreach( $histogram as $word => $count ) {
-    $sql[] = '("'.$word.'", '.$count.')';
+//selectSubstringHistogram($histogram, $inputText, $substringLength)
+$substring = selectSubstringHistogram($histogram, $string, 4);
+echo "<br>$substring<br>";
+
+$sql = array();
+		
+foreach($histogram as $word => $count){
+	$sql[] = '("'.$word.'", '.$count.')';
 }
-
-$query = 'INSERT INTO table (text, category) VALUES '.implode(',', $sql);
-echo $query;
-
-
-/*
-$histogramScores = scoreHistogram($histogram);
-print_r($histogramScores);
-
-$repositoryScore = 0;
-$words = explode(" ", $string);
-
-foreach($words as $word){
-	$repositoryScore += $histogramScores[$word];
-}
-
-echo "<br>repository score = $repositoryScore<br>";*/
+$blah = array_merge(array_keys($histogram),array_values($histogram));
+//echo implode(',', $histogram);
+print_r($blah);
 
 ?>

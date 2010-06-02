@@ -11,8 +11,7 @@ CREATE TABLE config (
 	);
 INSERT INTO config VALUES (null, 10, '/etc/snort/rules/snortdlp.rules');
 CREATE TABLE words (
-	word_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	word VARCHAR(50),
+	word VARCHAR(50) PRIMARY KEY,
 	count INT
 	);
 CREATE TABLE users (

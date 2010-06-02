@@ -7,8 +7,6 @@
 		 * Return the lowest scored substring from $inputText using a passed histogram
 		 */
 		
-		$alpha = 1; //local repository weight
-		$beta = .5; //global repository weight
 		$substringScores = array();
 		$split = explode(" ", standardizeText($inputText)); //split standardized string into words
 		
@@ -18,13 +16,11 @@
 		for($i=0; $i < count($split) - $substringLength +1; $i++){
 			$substring = implode(" ", array_slice($split,$i,$substringLength)); //grab a substring of the correct length
 			
-			$repositoryScore = 0;
-			$words = explode(" ", $substring); //get our repository score
+			$score = 0;
+			$words = explode(" ", $substring);
 			foreach($words as $word){
-				$repositoryScore += $histogramScores[$word];
+				$score += $histogramScores[$word];
 			}
-			
-			$score = $alpha * localScore($histogram, $substring) + $beta * $repositoryScore;
 			$substringScores[$i] = $score;
 		}
 		asort($substringScores); //sort the frequency array by value but preserve keys
@@ -56,22 +52,6 @@
 		
 		return $histogram;
 	}
-	
-	function localScore($histogram, $substring){
-		/*
-		 * Return a score of a specific substring using the local histogram.
-		 */
-		
-		//need standardizeText() here?
-		$words = explode(" ", standardizeText($substring));
-		$score = 0;
-		
-		foreach ($words as $word){
-			$score += $histogram[$word];
-		}
-		
-		return $score;
-	}	
 
 	function selectSubstringModifiedHistogram($histogram, $inputText, $substringLength){
 		
@@ -96,9 +76,6 @@
 			$substring = implode(" ", array_slice($split,$pos,$substringLength)); //pull out the random substring
 		}
 		
-		return $substring;
-		
+		return $substring;	
 	}
-	
-	
 ?>
