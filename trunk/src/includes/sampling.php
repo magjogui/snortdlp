@@ -1,7 +1,7 @@
 <?php
 	//include("common.php"); //utility class
 	
-	function selectSubstringHistogram($histogram, $inputText, $substringLength){
+	function selectSubstringHistogram($histogram, $inputText, $substringLength, $count){
 		
 		/*
 		 * Return the lowest scored substring from $inputText using a passed histogram
@@ -29,7 +29,8 @@
 		//grab the lowest scored substring
 		$substring = implode(" ", array_slice($split,key($substringScores),$substringLength));
 		
-		while(inRepository($substring)){ //while the chosen substring is found in the repository
+		//grab the $count'th lowest substring (in case of recalculation
+		for ($i=0; $i<$count; $i++){
 			if (!next($substringScores)){ //next() returns false at the end of the array
 				return ""; //if a unique substring is not found, return ""
 			}
@@ -58,7 +59,7 @@
 		//only consider the middle 50% of the text when generating the histogram
 		$inputText = substr($inputText, strlen($inputText) * .25, strlen($inputText)*.5);
 		
-		$substring = selectSubstringHistogram($histogram, $inputText, $substringLength);
+		$substring = selectSubstringHistogram($histogram, $inputText, $substringLength, 0);
 		
 		return $subtring;
 	}

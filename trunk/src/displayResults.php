@@ -108,7 +108,7 @@ Released   : 20100309
 						//based on sampling method chosen, select the identifiable substring
 						switch($scoringMethod){
 							case "histogram":
-								$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+								$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength, 0);
 								break;
 							case "modifiedhist":
 								$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
@@ -120,7 +120,7 @@ Released   : 20100309
 								$substring = selectSubstringRandom($inputText, $substringLength);
 								break;
 							default:
-								$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+								$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength, 0);
 						}
 						echo "\"$substring\"";
 					?>
