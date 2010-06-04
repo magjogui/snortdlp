@@ -82,7 +82,7 @@ Released   : 20100309
 						$result = mysql_query($query);
 						
 						while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-							echo "<tr><td width=\"250\">" . $row['path'] ."/". $row['file_name'] . "</td><td><a href=\"display.php?type=file&id=" . $row['rule_id'] . "\">display</a> |</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=#>recalculate</a></td></tr>";
+							echo "<tr><td width=\"250\">" . $row['path'] ."/". $row['file_name'] . "</td><td><a href=\"display.php?type=file&id=" . $row['rule_id'] . "\">display</a> |</td><td><a href=\"includes/remove.php?type=file&id=" . $row['rule_id'] . "\">delete</a> |</td><td><a href=\"includes/recalculate.php?type=file&id=" . $row['rule_id'] . "\">recalculate</a></td></tr>";
 						}					
 						include("includes/dbclose.php"); 
 						

@@ -58,7 +58,7 @@
 		$words = array_map("sanitizeRegex",$words); //sanitize each word
 
 		//glue words together and build the regex
-		$regex = "/(" . implode(")([\s]*?)(", $words) . ")/i";
+		$regex = "/(" . implode(')([\\r\s]*?)(', $words) . ")/i";
 		
 		return $regex;
 	}
@@ -338,7 +338,7 @@
 			
 			switch($scoringMethod){
 				case "histogram":
-					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength, 0);
 					break;
 				case "modifiedhist":
 					//$substring = selectSubstringModifiedHistogram(genHistogram($inputText), $inputText, $substringLength);
@@ -349,7 +349,7 @@
 					//$substring = selectSubstringRandom($inputText, $substringLength);
 					break;
 				default:
-					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength);
+					$substring = selectSubstringHistogram(genHistogram($inputText), $inputText, $substringLength, 0);
 			}
 			
 			if($substring == ""){

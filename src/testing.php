@@ -1,7 +1,7 @@
 <?php 
 include("includes/common.php");
 
-$string = "this is a test this is a second test test"; //1872
+$string = "this is a test this is a second test"; //1872
 
 $words = explode(" ", $string); //split our standardized input by spaces
 $histogram = array_count_values($words); //return an arrray of occurances
@@ -12,8 +12,8 @@ $histogram = scoreHistogram($histogram);
 print_r($histogram);
 echo "<br>";
 
-//selectSubstringHistogram($histogram, $inputText, $substringLength)
-$substring = selectSubstringHistogram($histogram, $string, 4);
+//selectSubstringHistogram($histogram, $inputText, $substringLength, $count)
+$substring = selectSubstringHistogram($histogram, $string, 4, 0);
 echo "<br>$substring<br>";
 
 $sql = array();
