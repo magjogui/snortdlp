@@ -16,9 +16,12 @@
 		//rewrites the rules file with all the rules currently in the db
 		rewriteRulesFile();
 		
-		//returns to inputFile.php
-		header("location: ../inputFile.php");
-		//die();
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			header("location: $_SERVER['HTTP_REFERER']");
+		} else {
+			header("location: ../inputFile.php");
+		} 
+
 	} else if($type == "folder"){
 		
 		include("dbconnect.php");
@@ -29,7 +32,13 @@
 		mysql_query($query);
 		
 		include("dbclose.php");
-		header("location: ../folderPath.php");
+		
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			header("location: $_SERVER['HTTP_REFERER']");
+		} else {
+			header("location: ../folderPath.php");
+		}
+
 	} else if($type == "free"){
 		
 		include("dbconnect.php");
@@ -43,6 +52,14 @@
 		//rewrites the rules file with all the rules currently in the db
 		rewriteRulesFile();
 		
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			header("location: $_SERVER['HTTP_REFERER']");
+		} else {
+			header("location: ../freeText.php");
+		}
+
+	}	
+
 		header("location: ../freeText.php");
 	} else if($type == "db"){
 		include("dbconnect.php");
@@ -58,5 +75,5 @@
 		
 		header("location: ../database.php");
 	}
-	
+
 ?>
