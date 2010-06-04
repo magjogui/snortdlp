@@ -64,49 +64,61 @@ Released   : 20100309
 	$dbuser = $user;
 	$dbpass = $pass;
 	
-	$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die  ('Error connecting to mysql');
-	
-	$dbname = $db;
-	mysql_select_db($dbname);
-	
-	$column = mysql_real_escape_string($column);
-	$table = mysql_real_escape_string($table);
-	
-	$query = "SELECT $column FROM $table";
-	$result = mysql_query($query);
-	
-	$numRows = mysql_num_rows($result); //gets the number of rows from the query
-	
-	$numRowsUsed = (int)sqrt($numRows); //takes the sqare root to get a smaller samlple
-	echo "$numRowsUsed<br>";
-	
-	$regex = "/("; //starts the regex value
-	
-	for($i = 0; $i < $numRowsUsed; $i++){ //loops through the number of number of rows to sample
-		$rowNum = (int)rand($numRowsUsed * $i, $numRowsUsed * ($i + 1)); //selects a random sample from the numer of rows
-		mysql_data_seek($result, $rowNum); //goes to a specific result
-		$row = mysql_fetch_assoc($result); // gets the specific result as a $row
-		
-		$value = $row[$column]; //grabs the random number value
-		$value = sanitizeRegex($value); //escapes any reserved regex char
-		
-		$regex = $regex . $value . "|"; //builds the regex
-	}
-	
-	$regex = substr($regex,0,-1) . ")/i"; //completes the regex
-	
-	
-	mysql_close($conn); //closes the db connection
-	
-	$sid = getNextsid();
-	$rule = "alert tcp \$HOME_NET any -> \$EXTERNAL_NET any (msg:\"Possible detection of: $table : $column\"; pcre:\"$regex\"; classtype:data-loss; sid:$sid;)";
-	
-	include("includes/dbconnect.php");
-	$query = "INSERT INTO rules (file_name, path, rule, regex, count, sid, type) VALUES ('$table', '$column', '$rule', '$regex', 1, $sid, 4)";
-	mysql_query($query);
-	include("includes/dbclose.php");
-	
+	//flags
+	$connError = false;
+	$noData = false;
 	$incomplete = false;
+	
+	$conn = mysql_connect($dbhost, $dbuser, $dbpass) or $connError = true;
+	if (!$connError){
+		$dbname = $db;
+		mysql_select_db($dbname);
+		
+		$column = mysql_real_escape_string($column);
+		$table = mysql_real_escape_string($table);
+		
+		$query = "SELECT $column FROM $table";
+		$result = mysql_query($query);
+		
+		$numRows = mysql_num_rows($result) or $noData = true; //gets the number of rows from the query
+		
+		if ($numRows > 0){
+			if ($numRows < 100000){
+				$numRowsUsed = (int)sqrt($numRows); //takes the sqare root to get a smaller samlple
+			} else {
+				$numRowsUsed = (int)pow($numRows, 1/3); //takes the cube root to get a smaller samlple of extremely large databases
+			}
+			
+			$regex = "/("; //starts the regex value
+			
+			for($i = 0; $i < $numRowsUsed; $i++){ //loops through the number of number of rows to sample
+				$rowNum = (int)rand(($numRows/$numRowsUsed) * $i, ($numRows/$numRowsUsed) * ($i + 1)); //selects a random sample from the numer of rows
+				mysql_data_seek($result, $rowNum); //goes to a specific result
+				$row = mysql_fetch_assoc($result); // gets the specific result as a $row
+				
+				$value = $row[$column]; //grabs the random number value
+				$value = sanitizeRegex($value); //escapes any reserved regex char
+				
+				$regex = $regex . $value . "|"; //builds the regex
+			}
+			
+			$regex = substr($regex,0,-1) . ")/i"; //completes the regex
+			
+			mysql_close($conn); //closes the db connection
+			
+			$sid = getNextsid();
+			$rule = "alert tcp \$HOME_NET any -> \$EXTERNAL_NET any (msg:\"Possible detection of: $table : $column\"; pcre:\"$regex\"; classtype:data-loss; sid:$sid;)";
+			
+			include("includes/dbconnect.php");
+			$query = "INSERT INTO rules (file_name, path, rule, regex, count, sid, type) VALUES ('$table', '$column', '$rule', '$regex', 1, $sid, 4)";
+			mysql_query($query);
+			include("includes/dbclose.php");
+			
+			
+		} else {
+			$noData = true;
+		}
+	}
 	
 	} else if(!isset($_POST['server']) && !isset($_POST['server']) && !isset($_POST['table']) && !isset($_POST['db']) && !isset($_POST['port']) && !isset($_POST['user']) && !isset($_POST['pass'])){
 		$incomplete = false;
@@ -122,6 +134,12 @@ Released   : 20100309
 				<div class="entry">
 				<?php if($incomplete){
 				echo "<font color=\"red\"><b>One of the fields was incomplete!</b></font><br><br>";
+				}?>
+				<?php if($noData){
+				echo "<font color=\"red\"><b>The database table you entered contains no data!</b></font><br><br>";
+				}?>
+				<?php if($connError){
+				echo "<font color=\"red\"><b>There was a database connection error! Please make sure you entered the correct information.</b></font><br><br>";
 				}?>
 					<form action="database.php" method="post">
 						<table>
