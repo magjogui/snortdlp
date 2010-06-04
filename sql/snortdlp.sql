@@ -31,8 +31,8 @@ CREATE TABLE rules (
 	rule_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	file_name VARCHAR(200),
 	path VARCHAR(200),
-	rule VARCHAR(300),
-	regex VARCHAR(300),
+	rule VARCHAR(1000),
+	regex VARCHAR(900),
 	count INT,
 	sid INT,
 	type INT
