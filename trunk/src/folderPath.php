@@ -77,31 +77,67 @@ Released   : 20100309
 		$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
 		$substringLength = $row['substr_length']; //sets the substringLength to length from db
 		include("includes/dbclose.php");
-		processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+		
+		if (isset($_POST['local'])){
+
+			processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+
+		} else if (isset($_POST['network'])){
+			$ip = $_POST['ip'];
+			$user = $_POST['user'];
+			$pass = $_POST['pass'];
+			$folder = $_POST['location'];
+			
+			$path = openShare($ip, $user, $pass, $folder);
+			processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+			closeShare();
+		}
 	}
 	
 	?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">
-				<h2 class="title">Process New Folder</a></h2>
 				<div class="entry">
+				<h2 class="title">Process Network Folder</a></h2>
 					<form action="folderPath.php" method="post">
 						<table>
-						<tr><td><b>Location: <b><input type="text" id="location" name="location" value="/home/will/test/"/></td>
-						<tr><td><b>Method: </b>
+						<tr><td><b>IP Address: </b></td<td><input type="text" id="ip" name="ip"/></td>
+							<td><b>Network Folder: </b></td<td><input type="text" id="location" name="location"/></td>    
+						<tr><td><b>Username: </b></td<td><input type="text" id="user" name="user"/></td>
+						    <td><b>Password: </b></td<td><input type="password" id="pass" name="pass"/></td>
+						<tr><td><b>Method: </b></td<td>
 							<SELECT NAME="scoringMethod">
 								<OPTION VALUE=histogram SELECTED>Histogram
 								<OPTION VALUE=modifiedhist>Modified histogram
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
 								<OPTION VALUE=random>Random
 							</SELECT></td>
-						<tr><td><b>Include subfolders: </b>
-							<input type="checkbox" name="includeSubfolders" id="includeSubfolders" value="true"></input></td>
-							<td align="right"><input type="submit" id="create" value="Process" /></td></tr>
+						<tr><td><b>Include subfolders: </b></td<td>
+							<input type="checkbox" name="includeSubfolders" id="includeSubfolders" value="true"></input></td></tr>
+							<input type="hidden" name="network" value="true">
+							<tr><td align="left"><input type="submit" id="create" value="Process" /></td></tr>
 						</table>						
 					</form>
-					<br><br><br>
+					<br><br>
+				<h2 class="title">Process Local Folder</a></h2>
+					<form action="folderPath.php" method="post">
+						<table>
+						<tr><td><b>Local Folder: </b></td><td><input type="text" id="location" name="location"/></td>
+						<tr><td><b>Method: </b></td><td>
+							<SELECT NAME="scoringMethod">
+								<OPTION VALUE=histogram SELECTED>Histogram
+								<OPTION VALUE=modifiedhist>Modified histogram
+								<OPTION VALUE=multipleRandSamples>Multiple random samples
+								<OPTION VALUE=random>Random
+							</SELECT></td>
+						<tr><td><b>Include subfolders: </b></td><td>
+							<input type="checkbox" name="includeSubfolders" id="includeSubfolders" value="true"></input></td>
+							<input type="hidden" name="local" value="true"></tr><tr>
+							<td align="middle"><input type="submit" id="create" value="Process" /></td></tr>
+						</table>
+					</form>
+					<br><br>
 					<h2 class="title">Manage Protected Folders</a></h2>
 					<br>
 					<table>

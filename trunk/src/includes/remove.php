@@ -17,7 +17,7 @@
 		rewriteRulesFile();
 		
 		if (isset($_SERVER['HTTP_REFERER'])) {
-			header("location: $_SERVER['HTTP_REFERER']");
+			header("location: " . $_SERVER['HTTP_REFERER']);
 		} else {
 			header("location: ../inputFile.php");
 		} 
@@ -28,13 +28,13 @@
 		$id = mysql_real_escape_string($id);
 		
 		//deletes the record for this file
-		$query = "DELETE FROM rules WHERE rule_id = $id";
+		$query = "DELETE FROM rules WHERE path = '$id' AND type = 2";
 		mysql_query($query);
 		
 		include("dbclose.php");
 		
 		if (isset($_SERVER['HTTP_REFERER'])) {
-			header("location: $_SERVER['HTTP_REFERER']");
+			header("location: " . $_SERVER['HTTP_REFERER']);
 		} else {
 			header("location: ../folderPath.php");
 		}
@@ -53,14 +53,10 @@
 		rewriteRulesFile();
 		
 		if (isset($_SERVER['HTTP_REFERER'])) {
-			header("location: $_SERVER['HTTP_REFERER']");
+			header("location: " . $_SERVER['HTTP_REFERER']);
 		} else {
 			header("location: ../freeText.php");
-		}
-
-	}	
-
-		header("location: ../freeText.php");
+		}	
 	} else if($type == "db"){
 		include("dbconnect.php");
 		$id = mysql_real_escape_string($id);
@@ -73,7 +69,11 @@
 		//rewrites the rules file with all the rules currently in the db
 		rewriteRulesFile();
 		
-		header("location: ../database.php");
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			header("location: " . $_SERVER['HTTP_REFERER']);
+		} else {
+			header("location: ../database.php");
+		}
 	}
 
 ?>
