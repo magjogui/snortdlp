@@ -174,15 +174,18 @@
 	
 	function openShare($ip, $user, $pass, $folder){
 		exec("sudo mkdir /mnt/share");
-		exec("sudo mount -t cifs //" . $ip . "/" . $folder . " /mnt/share -o username=" . $user . ",password=" . $pass);
+		exec("sudo mount -t cifs //$ip/$folder /mnt/share -o username=$user,password=$pass");
 		
-		return "/mnt/share/";
+		return '/mnt/share/';
 	}
 	
 	function closeShare(){
 		//TODO: check why this isn't executing correctly
+		
 		exec("sudo umount -l /mnt/share");
-		exec("sudo rmdir /mnt/share");
+		exec("sudo umount /mnt/share");
+		exec("sudo rmdir /mnt/share");	
+		
 		return;
 	}
 	
