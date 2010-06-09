@@ -62,7 +62,9 @@ Released   : 20100309
 									echo "<tr><td><b>Regular Expression: </b></td><td>$regex</td></tr>";
 									echo "<tr><td><b>Snort Rule: </b></td><td>$rule</td></tr>";
 									echo "</table>";
-								}						
+								} else {
+									header("location: inputFile.php");
+								}		
 								include("includes/dbclose.php");
 							}
 						} else if ($type == "folder") {
@@ -79,6 +81,8 @@ Released   : 20100309
 										
 								}
 								echo "</table>";	
+							} else {
+								header("location: folderPath.php");
 							}
 							include("includes/dbclose.php");
 						} else if ($type == "free"){
@@ -102,6 +106,8 @@ Released   : 20100309
 									echo "<tr><td><b>Regular Expression: </b></td><td>$regex</td></tr>";
 									echo "<tr><td><b>Snort Rule: </b></td><td>$rule</td></tr>";
 									echo "</table>";
+								} else {
+									header("location: freeText.php");
 								}
 								include("includes/dbclose.php"); 
 						}
@@ -126,7 +132,9 @@ Released   : 20100309
 									echo "<tr><td><b>Regular Expression: </b></td><td>$regex</td></tr>";
 									echo "<tr><td><b>Snort Rule: </b></td><td>$rule</td></tr>";
 									echo "</table>";
-								}						
+								} else {
+									header("location: database.php");
+								}	
 								include("includes/dbclose.php");
 							}
 						}
