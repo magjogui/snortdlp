@@ -297,25 +297,33 @@
 		return $locations;
 	}
 	
-	function processFolder($startingDirectory, $includeSubfolders, $scoringMethod, $substringLength, $snortFile){
-		/*
-		 * Crawl a directory a process each file found.
-		 * 
-		 * Used by folderPath.php
-		 */
+	/**
+	 * Crawl a directory a process each file found.
+	 * 
+	 * Used by folderPath.php
+	 * 
+	 * @param $startingDirectory - the directory to begin crawling for files (will be the local mounted directory ("/mnt/share"))
+	 * @param $netPath - used to store the actual location in the database, instead of using the local mounted directory ("/mnt/share")
+	 * @param $includeSubfolders - binary variable that if true will include sub folders
+	 * @param $scoringMethod - the scoring method chosen (i.e. histogram, random, etc.)
+	 * @param $substringLength - length of the substring from the config table
+	 * @param $snortFile - location of the snort file from the config table
+	 */
+	function processFolder($startingDirectory, $netPath, $includeSubfolders, $scoringMethod, $substringLength, $snortFile){
 		if($dObj = dir($startingDirectory)) {
 			while($thisEntry = $dObj->read()) { 
 				if ($thisEntry != "." && $thisEntry != "..") {
 					$path = "$startingDirectory$thisEntry";
-					
+
 					//process the file we found
 					if (!is_dir($path)){
-						processFile(2, $path, $scoringMethod, $substringLength, $snortFile); //if the found file is not a directory, process it
+						processFile(2, $path, $netPath, $scoringMethod, $substringLength, $snortFile); //if the found file is not a directory, process it
 					}
 					
 					// If we are processing subdirectories and the entry is a directory, recursively call our function on it
 					if( ($includeSubfolders) && is_dir($path)){
-						processFolder($path."/", $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+						$netPathTemp = (($netPath[strlen($netPath)-1] == "/") ? ($netPath) : ($netPath . "/")) . $thisEntry; //gets the new path to add to the db
+						processFolder($path."/", $netPathTemp, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 					} 
 				} else { 
 						//ignore "." and ".." to prevent an infinite loop
@@ -324,13 +332,19 @@
 		}
 	}
 	
-	function processFile($type, $path, $scoringMethod, $substringLength, $snortFile){
-		
-		/*
-		 * Process an individual filepath.
-		 * 
-		 * Type = 1 for individual processed files, 2 for files processed from a folder crawl.
-		 */
+	/**
+	 * Process an individual filepath.
+	 * 
+	 * Type = 1 for individual processed files, 2 for files processed from a folder crawl.
+	 * 
+	 * @param $type - allows this function to use individual files (1) or files processed from a folder crawl (2)
+	 * @param $path - the local mounted directory ("/mnt/share")
+	 * @param $netPath - the actual network directory
+	 * @param $scoringMethod - scoring technique used (i.e. histogram, random, etc.)
+	 * @param $substringLength - from the config table
+	 * @param $snortFile - from the config table
+	 */
+	function processFile($type, $path, $netPath, $scoringMethod, $substringLength, $snortFile){
 		
 		if(!fileAlreadyProcessed($path)){ 
 			
@@ -374,12 +388,13 @@
 			$fileName = array_pop($parts);
 			$path = implode("/", $parts); //rebuild our path
 			
+			$netPath = mysql_real_escape_string($netPath); //path name to be stored in the database
 			$path = mysql_real_escape_string($path);
 			$fileName = mysql_real_escape_string($fileName);
 			$rule = mysql_real_escape_string($rule);
 			$regex = mysql_real_escape_string(createRegex($substring));
 			
-			$query = "INSERT INTO rules (file_name, path, rule, regex, count, sid, type) VALUES ('$fileName', '$path', '$rule', '$regex', 1, $sid, $type)";
+			$query = "INSERT INTO rules (file_name, path, rule, regex, count, sid, type) VALUES ('$fileName', '$netPath', '$rule', '$regex', 1, $sid, $type)";
 			mysql_query($query);
 			include("dbclose.php");
 		}

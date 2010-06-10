@@ -60,36 +60,25 @@ Released   : 20100309
 	}
 	
 	if ($processFolder){
-		include("includes/dbconnect.php");
-		//gets the snort rules file
-		$query = "SELECT substr_length, snort_rules_path FROM config WHERE config_id = 1";
-		$result = mysql_query($query);
-		$num_rows = mysql_num_rows($result);
 		
-		//checks if the user has configured the snort rule path
-		if($num_rows!=1){
-			header("location: config?new=1");
-			die();
-		}
-		
-		//sets variables to db values
-		$row = mysql_fetch_array($result);
-		$snortFile = $row['snort_rules_path']; //sets snortFile to the file and path from db
-		$substringLength = $row['substr_length']; //sets the substringLength to length from db
-		include("includes/dbclose.php");
+		$config = getConfig();
+		$snortFile = $config['snortFile'];
+		$substringLength = $config['substringLength'];
 		
 		if (isset($_POST['local'])){
 
-			processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+			processFolder($path, $path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 
 		} else if (isset($_POST['network'])){
 			$ip = $_POST['ip'];
 			$user = $_POST['user'];
 			$pass = $_POST['pass'];
 			$folder = $_POST['location'];
+			$netPath = "//" . $ip . (($folder[0] == "/") ? ($folder) : ("/" . $folder));
+			
 			
 			$path = openShare($ip, $user, $pass, $folder);
-			processFolder($path, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
+			processFolder($path, $netPath, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 			closeShare();
 		}
 	}

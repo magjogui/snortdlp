@@ -45,20 +45,58 @@ Released   : 20100309
 		 */
 		if (isset($_POST['scoringMethod']) && !empty($_POST['scoringMethod'])){
 			$scoringMethod = $_POST['scoringMethod'];
+			
+			if(isset($_POST['local'])){
+				processFile(1, $path, $path, $scoringMethod, $substringLength, $snortFile);
+			} else if (isset($_POST['network'])){
+				
+				$ip = $_POST['ip'];
+				$user = $_POST['user'];
+				$pass = $_POST['pass'];
+				$path = $_POST['path'];
+				$netPath = "//" . $ip . (($path[0] == "/") ? ($path) : ("/" . $path));
+				
+				$parts = explode("/", $path); //get our path element parts
+				$fileName = array_pop($parts);
+				$path = implode("/", $parts); //rebuild our path
+				
+				$path = openShare($ip, $user, $pass, $path) . $fileName;
+				processFile(1, $path, $netPath, $scoringMethod, $substringLength, $snortFile);
+				closeShare();
+			}
 		}
-		
-		processFile(1, $path, $scoringMethod, $substringLength, $snortFile);
+			
 	}
 	
 	?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">
-				<h2 class="title">Process New File</a></h2>
 				<div class="entry">
+				
+				<h2 class="title">Process Network File</a></h2>
 					<form action="inputFile.php" method="post">
 						<table>
-						<tr><td><b>Complete file path: </b><input type="text" id="path" name="path"/></td>
+						<tr><td><b>IP Address: </b></td<td><input type="text" id="ip" name="ip"/></td>
+							<td><b>Network File Path: </b></td<td><input type="text" id="path" name="path"/></td>    
+						<tr><td><b>Username: </b></td<td><input type="text" id="user" name="user"/></td>
+						    <td><b>Password: </b></td<td><input type="password" id="pass" name="pass"/></td>
+						<tr><td><b>Method: </b></td<td>
+							<SELECT NAME="scoringMethod">
+								<OPTION VALUE=histogram SELECTED>Histogram
+								<OPTION VALUE=modifiedhist>Modified histogram
+								<OPTION VALUE=multipleRandSamples>Multiple random samples
+								<OPTION VALUE=random>Random
+							</SELECT></td>
+							<input type="hidden" name="network" value="true">
+							<tr><td align="left"><input type="submit" id="create" value="Process" /></td></tr>
+						</table>						
+					</form>
+					<br><br>
+					<h2 class="title">Process Local File</a></h2>
+					<form action="inputFile.php" method="post">
+						<table>
+						<tr><td><b>File Path: </b><input type="text" id="path" name="path"/></td>
 						<td><b>Method: </b>
 							<SELECT NAME="scoringMethod">
 								<OPTION VALUE=histogram SELECTED>Histogram
@@ -66,6 +104,7 @@ Released   : 20100309
 								<OPTION VALUE=multipleRandSamples>Multiple random samples
 								<OPTION VALUE=random>Random
 							</SELECT></td></tr>
+							<input type="hidden" name="local" value="true">
 							<tr></tr><td align="left"><input type="submit" id="create" value="Create" /></td></tr>
 						</table>						
 					</form>
