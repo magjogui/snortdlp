@@ -74,7 +74,7 @@ Released   : 20100309
 			$user = $_POST['user'];
 			$pass = $_POST['pass'];
 			$folder = $_POST['location'];
-			$netPath = "//" . $ip . (($folder[0] == "/") ? ($folder) : ("/" . $folder));
+			$netPath = "//" . $ip . (($folder[0] == "/") ? ($folder) : ("/" . $folder . "/"));
 			
 			
 			$path = openShare($ip, $user, $pass, $folder);

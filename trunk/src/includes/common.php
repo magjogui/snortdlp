@@ -322,7 +322,7 @@
 					
 					// If we are processing subdirectories and the entry is a directory, recursively call our function on it
 					if( ($includeSubfolders) && is_dir($path)){
-						$netPathTemp = (($netPath[strlen($netPath)-1] == "/") ? ($netPath) : ($netPath . "/")) . $thisEntry; //gets the new path to add to the db
+						$netPathTemp = (($netPath[strlen($netPath)-1] == "/") ? ($netPath) : ($netPath . "/")) . $thisEntry . "/"; //gets the new path to add to the db
 						processFolder($path."/", $netPathTemp, $includeSubfolders, $scoringMethod, $substringLength, $snortFile);
 					} 
 				} else { 
