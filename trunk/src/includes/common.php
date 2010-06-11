@@ -97,7 +97,7 @@
 		/*
 		 * Count the lines in the snort file and return the next logical sid for snort rules
 		 */
-		$sidBase = 1000000;
+		$sidBase = 1000002;
 		
 		include("includes/dbconnect.php");
 		//gets the snort rules file
@@ -162,7 +162,25 @@
 		
 		//re-writes all rules from the db
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-			fwrite($file_handle, $row['rule']);
+			fwrite($file_handle, $row['rule'] . "\n");
+		}
+		include("dbclose.php");
+		
+		include("dbconnect.php");
+		//get our template configs
+		$query = "SELECT ssn_template, ccn_template FROM config";
+		$result = mysql_query($query);
+		$row = mysql_fetch_array($result);
+
+		if($row['ssn_template'] == 1){
+			$regex = "(^|\s)(00[1-9]|0[1-9]0|0[1-9][1-9]|[1-6]\d{2}|7[0-6]\d|77[0-2])(-?|[\. ])([1-9]0|0[1-9]|[1-9][1-9])\\3(\d{3}[1-9]|[1-9]\d{3}|\d[1-9]\d{2}|\d{2}[1-9]\d)($|\s|[;:,!\.\?])";
+			$rule = "alert tcp \$HOME_NET any -> \$EXTERNAL_NET any (msg:\"Possible detection of: social security number\"; pcre:\"$regex\"; classtype:data-loss; sid:1000000;)";
+			fwrite($file_handle, $rule . "\n");
+		}
+		if($row['ccn_template'] == 1){
+			$regex = "^((4\d{3})|(5[1-5]\d{2})|(6011))-?\d{4}-?\d{4}-?\d{4}|3[4,7]\d{13}$";
+			$rule = "alert tcp \$HOME_NET any -> \$EXTERNAL_NET any (msg:\"Possible detection of: credit card number\"; pcre:\"$regex\"; classtype:data-loss; sid:1000001;)";
+			fwrite($file_handle, $rule . "\n");
 		}
 		
 		//closes db connection
