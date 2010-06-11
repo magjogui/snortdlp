@@ -9,17 +9,36 @@ def alert():
 	
 	return
 
-def postProcess(file, rulesFile):
+def postProcess(fname, rulesFile):
 	
+	text = ""
+
 	#call the post extraction program
-	#subprocess.Popen( [program] + outputFile , shell=True)
+	#print "PROCESSING FILE: " + fname #verbose
+	try : 
+		process = subprocess.Popen( "perl cat_open_xml.pl " + fname , shell=True, stdout=subprocess.PIPE)		
+		text = str(process.communicate()[0])
+		#subprocess.Popen( "rm " + fname, shell=True) #use for removing the file
+	except : 
+		pass
 	
-	#f2 = open(rulesFile, 'r')
-	#rules = f2.readlines()
-	#f2.close()
+	f2 = open(rulesFile, 'r')
+	rules = f2.readlines()
+	f2.close()
 	
+	for rule in rules:
+		if rule[0] != '#':
+			x = rule.find("pcre:\"") + 7 #gets the rule begin index value
+			y = rule.find("/i\"") #gets the rule end index value
+			regexStr = rule[x:y]
+			regex = re.compile(regexStr, re.IGNORECASE)
+			result = regex.search(text)
+			if result != None:
+				#TODO: maches send alert to snort
+				break
+			# no match
+
 	#read in rules file, check against extracted text
-	
 	return
 
 def monitorCapture(outputFolder, rulesFile):
@@ -27,25 +46,26 @@ def monitorCapture(outputFolder, rulesFile):
 	outputFiles = list() #running list of the outputfiles in the directory
 	
 	#continuously monitor the extracted file folder
-	while(true):
+	while True:
 		
 		outputFilesCurrent = list()
 		
-		dirList=os.listdir(path) #list all the files in the folder
+		dirList=os.listdir(outputFolder) #list all the files in the folder
 		for fname in dirList:
-			outputFilesCurrent(fname)
+			#outputFilesCurrent(fname)
+			postProcess(outputFolder + fname, rulesFile)
 		
-		if len(outputFilesCurrent) != len(outputFiles):
+		#if len(outputFilesCurrent) != len(outputFiles):
 			# a new file has been added, process it
 			# postProcess(file, rulesFile) #...how to add multiple new files?
 			# outputFiles.append(file)
-			blah
+			#blah
 		
 		time.sleep(1) #sleep for 1 second
 
 
 def startCapture(configFile, interface, outputFolder):
-	#subprocess.Popen("tcpxtract -d " + interface + " -c " + configFile + " -o " + outputFolder, shell=True)
+	subprocess.Popen("tcpxtract -d " + interface + " -c " + configFile + " -o " + outputFolder, shell=True)
 	return
 	
 def usage():
