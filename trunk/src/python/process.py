@@ -9,83 +9,89 @@ def alert():
 	
 	return
 
-def postProcess(outputFile):
+def postProcess(file, rulesFile):
 	
 	#call the post extraction program
 	#subprocess.Popen( [program] + outputFile , shell=True)
 	
-	#crawl result folder, do for rule in rules
+	#f2 = open(rulesFile, 'r')
+	#rules = f2.readlines()
+	#f2.close()
+	
+	#read in rules file, check against extracted text
 	
 	return
 
-def monitorCapture(outputFile, seconds, rulesFile):
-
-	time.sleep(seconds)
-
-	f = open(outputFile, 'r')
-	captureData = f.read()
-	f.close()
+def monitorCapture(outputFolder, rulesFile):
 	
-	# if [pdf signature] in captureData or [office signature] in captureData:
-	#	postProcess(outputFile)
+	outputFiles = list() #running list of the outputfiles in the directory
+	
+	#continuously monitor the extracted file folder
+	while(true):
 		
+		outputFilesCurrent = list()
+		
+		dirList=os.listdir(path) #list all the files in the folder
+		for fname in dirList:
+			outputFilesCurrent(fname)
+		
+		if len(outputFilesCurrent) != len(outputFiles):
+			# a new file has been added, process it
+			# postProcess(file, rulesFile) #...how to add multiple new files?
+			# outputFiles.append(file)
+			blah
+		
+		time.sleep(1) #sleep for 1 second
 
-	f2 = open(rulesFile, 'r')
-	rules = f2.readlines()
-	f2.close()
-	for rule in rules:
-		matches = re.findall(pattern, captureData)
-		if len(matches) > 0:
-			print "match found"
-			#alert()
 
-
-def startCapture(homeNetwork, seconds, outputFile):
-	#sudo tcpdump -G [seconds] -w [output_file] -W 2 -s 0 tcp and src net [192.168.0.0/16] and dst net ![192.168.0.0/16]
-	#kick off the tcpdump with ring buffer
-	#subprocess.Popen("tcpdump -G " + seconds + " -w " + outputFile + " -s 0 tcp and src net " + homeNetwork + " and dst net !" + homeNetwork, shell=True)
-
+def startCapture(configFile, interface, outputFolder):
+	#subprocess.Popen("tcpxtract -d " + interface + " -c " + configFile + " -o " + outputFolder, shell=True)
+	return
+	
 def usage():
-	print "\nUsage: ./dlpTest.py [-n] [-r] [-s] [-o]"
-	print "\th: help\n\tn: home network\n\tr: rules file\n\ts: seconds of traffic to capture\n\to: output file to capture to\n"
+	print "Usage: ./dlpTest.py [OPTIONS] [[-r <RULESFILE>] [-c <CONFIG FILE>]]"
+	print "Valid options include:"
+	print "  --interface, -i <INTERFACE>\tinterface to capture from (i.e. eth1)"
+	print "  --rules, -r <RULESFILE>\tsnort detection rules file"
+	print "  --config, -c <CONFIGFILE>\ttcpxtract config file with headers to extract"
+	print "  --output, -o <FOLDER>\t\tfolder to save the extracted files to"
+	print "  --help, h\t\t\tdisplay this screen"
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "n:r:s:o:h")
+		opts, args = getopt.getopt(sys.argv[1:], "i:r:c:o:h")
 	except getopt.GetoptError, err:
 		print str(err) # will print something like "option -a not recognized"
 		usage()
 		sys.exit(2)
-	homeNetwork = ""
 	rulesFile = ""
-	outputFile = "captured_output"
-	seconds = 60
+	outputFolder = "./"
+	interface = "eth1"
+	configFile = "tcpxtract.conf"
 	
 	#grab all of our arguments
 	for o, a in opts:
-		if o in ("-n", "--network"):
-			homeNetwork = a
+		if o in ("-i", "--interface"):
+			interface = a
 		elif o in ("-r", "--rules"):
 			rulesFile = a
-		elif o in ("-s", "--seconds"):
-			seconds = int(a)
+		elif o in ("-c", "--config"):
+			configFile = a
 		elif o in ("-o", "--output"):
-			outputFile = a
+			outputFolder = a
 		elif o in ("-h", "--help"):
 			usage()
 			sys.exit()
 		else:
 			assert False, "unhandled option"
 
-	if (homeNetwork == "" or rulesFile == ""):
+	if (rulesFile == ""):
 		#require these specific arguments
 		usage()
 		sys.exit()
 
-	startCapture(homeNetwork, seconds, outputFile)	
-	time.sleep(3)
-	monitorCapture(outputFile, seconds, rulesFile)
-
+	startCapture(configFile, interface, outputFolder)	
+	monitorCapture(outputFolder, rulesFile)
 
 if __name__ == "__main__":
     main()
