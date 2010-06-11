@@ -1,0 +1,12 @@
+PIGPEN INSTALL GUIDE
+
+Dependencies:
+-libpcap-dev
+-flex
+-python
+-tcpxtract 1.0.1
+
+Permissions:
+-in /etc/sudoers
+-- under: # User privilege specification
+-- add: www-data ALL=NOPASSWD: /bin/mount, /bin/umount, /bin/mkdir, /bin/rmdir
