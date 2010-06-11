@@ -27,20 +27,57 @@ Released   : 20100309
 	<hr />
 	<!-- end #logo -->
 	<?php include("includes/header.php"); ?>
+	<?php include("includes/common.php"); ?>
+	<?php 
+
+	$config = getConfig();
+	$snortFile = $config['snortFile'];
+	$includeSSN = 0;
+	$includeCCN = 0;
+	
+	if ( !isset($_POST['SSN']) && !isset($_POST['CCN']) ){ //if nothing passed
+		
+
+		include("includes/dbconnect.php"); 
+		$query = "SELECT ssn_template, ccn_template FROM config WHERE config_id = 1";
+		$result = mysql_query($query);
+		$row = mysql_fetch_array($result);
+		
+		$includeSSN = $row['ssn_template'];
+		$includeCCN = $row['ccn_template'];
+		
+		include("includes/dbclose.php");
+	}
+	else{ //if something has changed
+		
+		$includeSSN = $_POST['SSN'];
+		$includeCCN = $_POST['CCN'];
+
+		//if we get new values posted, update the SQL database
+		include("includes/dbconnect.php");
+		$query = "UPDATE config SET ssn_template = $includeSSN, ccn_template = $includeCCN WHERE config_id = 1";
+		mysql_query($query);
+		include("includes/dbclose.php");
+		
+		//since things have changed, rewrite the snort rules file
+		rewriteRulesFile();
+	}
+	
+	?>
 	<div id="page">
 		<div id="content">
 		  <div class="post">
 				<h2 class="title">Templates</a></h2>
 				<div class="entry">
-					<form action="templates.php" method="post">
+					<form action="templates.php" method="POST">
 						<table>
 						<tr><td><strong>Template</strong></td><td><strong>Use</strong></td></tr>
-						<tr><td>Social Security Numbers:</td><td><input type="checkbox" name="SSN" value="SSN"  /></td></tr>
-						<tr><td>Driver's License Numbers:</td><td><input type="checkbox" name="DLN" value="DLN"  /></td></tr>
-						<tr><td>Credit Card Numbers:</td><td><input type="checkbox" name="CCN" value="CCN"  /></td></tr>
-						<tr><td>Financial Data:</td><td><input type="checkbox" name="finance" value="finance"  /></td></tr>
-						<tr><td>Source Code:</td><td><input type="checkbox" name="source" value="source"  /></td></tr>
-						<tr><td>Medical Data:</td><td><input type="checkbox" name="medical" value="medical"  /></td></tr>
+						<tr><td>Social Security Numbers:</td><td>
+							<input type="hidden" name="SSN" value="0" />
+							<input type="checkbox" name="SSN" value="1" <?php if($includeSSN) echo "checked";?>  /></td></tr>
+						<tr><td>Credit Card Numbers:</td><td>
+							<input type="hidden" name="CCN" value="0" />
+							<input type="checkbox" name="CCN" value="1" <?php if($includeCCN) echo "checked";?>  /></td></tr>
 						</table>
 						<br>
 						<input type="submit" id="submit" value="submit" />

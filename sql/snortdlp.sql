@@ -7,9 +7,12 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE config (
         config_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         substr_length INT,
-	snort_rules_path VARCHAR(100)
+	snort_rules_path VARCHAR(100),
+	ssn_template INT,
+	ccn_template INT	
 	);
-INSERT INTO config VALUES (null, 10, '/etc/snort/rules/snortdlp.rules');
+
+INSERT INTO config VALUES (null, 10, '/etc/snort/rules/snortdlp.rules', 0, 0);
 CREATE TABLE words (
 	word VARCHAR(50) PRIMARY KEY,
 	count INT
