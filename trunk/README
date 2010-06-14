@@ -3,8 +3,10 @@ PIGPEN INSTALL GUIDE
 Dependencies:
 -libpcap-dev
 -flex
--python
+-python -- version?
 -tcpxtract 1.0.1
+	apt-get install libxml-libxml-perl
+	apt-get install libarchive-any-perl
 
 Permissions:
 -in /etc/sudoers
