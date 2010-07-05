@@ -4,9 +4,11 @@ Dependencies:
 -libpcap-dev
 -flex
 -python -- version?
+-pexpect for python (already installed on ubuntu I believe)
 -tcpxtract 1.0.1
 	apt-get install libxml-libxml-perl
 	apt-get install libarchive-any-perl
+libextractor -> apt-get install extract
 
 Permissions:
 -in /etc/sudoers
