@@ -55,7 +55,16 @@ def postProcess(alertInfo, rulesFile):
 	Perform post processing on a file extracted by tcpxtract.
 	If a rule matches, trigger alert() to output the appropriate snort alert.
 
-	Meta-data -> http://www.linuxjournal.com/article/7552
+	Meta-data (general)
+	http://www.linuxjournal.com/article/7552
+	http://www.forensicswiki.org/wiki/Tools:Document_Metadata_Extraction
+	http://chicago-ediscovery.com/computer-forensic-howtos/howto-extract-metadata-microsoft-word-linux.html
+
+	Office 2007 metadata -> http://blogs.sans.org/computer-forensics/2009/07/10/office-2007-metadata/
+
+	Office 2003 metadata -> http://windowsir.blogspot.com/2006/09/metadata-and-ediscovery.html
+
+	PDF -> http://www.foolabs.com/xpdf/ (pdfinfo tool in the package)
 	"""
 
 	text = ""
