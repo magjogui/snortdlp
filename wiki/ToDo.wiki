@@ -1,10 +1,10 @@
+=Initial Brainstorming=
 #summary to do tasks
 
 == Introduction ==
 
 Various brainstormed tasks to start the project off.
 
-=Initial Brainstorming=
 == Initial Conceptual Considerations ==
 
   * Trigger external file processing from Snort (directly or with PCAP workaround)
